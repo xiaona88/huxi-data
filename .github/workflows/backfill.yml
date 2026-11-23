@@ -1,0 +1,15 @@
+name: backfill
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -u scripts/backfill.py
+      - run: |
+          git config user.name "backfill-bot"; git config user.email "backfill@users.noreply.github.com"
+          git add data/hist; git commit -m "backfill history" || true; git pull --rebase -q || true; git push
