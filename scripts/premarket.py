@@ -9,6 +9,7 @@ def get(u):
             time.sleep(2)
 bj=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
 today=os.environ.get("TODAY") or bj.date().isoformat()
+os.makedirs("data/premarket",exist_ok=True)
 plan=json.load(open("data/plan.json",encoding="utf-8"))
 days=sorted(f[:-5] for f in os.listdir("data/daily") if f.endswith(".json") and f[:4].isdigit() and len(f)==15)
 prev=[d for d in days if d<today]
