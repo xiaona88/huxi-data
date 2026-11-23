@@ -22,19 +22,34 @@ ETF={"50ETF":"sh510050","300ETF":"sh510300","500ETF":"sh510500","科创50ETF":"s
 TRACK={"中际旭创":"sz300308","美的集团":"sz000333","川投能源":"sh600674","长江电力":"sh600900"}
 
 os.makedirs("data/daily",exist_ok=True)
+bj=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
 ref=kline("sh000001",2)
 day=ref[-1]["day"]
+if day!=bj:
+    m=json.loads(get("https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sh000001&scale=5&ma=no&datalen=5"))
+    if m and m[-1]["day"].startswith(bj): day=bj
 out={"date":day,"generated_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")}
 bj=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
 if day!=bj:
     out["note"]=f"今天({bj})没有新K线，可能休市"
     json.dump(out,open(f"data/daily/{bj}_closed.json","w"),ensure_ascii=False,indent=1); raise SystemExit
 
+def today_from_5min(sym):
+    """用新浪5分钟线拼出当天日K（新浪日K收盘后要晚些才更新）。"""
+    m=json.loads(get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={sym}&scale=5&ma=no&datalen=60"))
+    t=[x for x in m if x["day"].startswith(day)]
+    if not t: return None
+    return {"day":day,"open":t[0]["open"],"close":t[-1]["close"],"high":str(max(float(x["high"]) for x in t)),
+            "low":str(min(float(x["low"]) for x in t)),"volume":str(sum(float(x["volume"]) for x in t))}
 def stat(sym,n=30):
     print("stat",sym,flush=True)
+    time.sleep(0.6)
     d=kline(sym,n)
     if d[-1]["day"]!=day:
-        time.sleep(3); d=kline(sym,n)
+        try:
+            b=today_from_5min(sym)
+            if b: d=d+[b]
+        except Exception as e: print("5min fail",sym,e,flush=True)
     c=[float(x["close"]) for x in d]; v=[float(x["volume"]) for x in d]
     r={"close":c[-1],"chg%":round((c[-1]/c[-2]-1)*100,2),"5d%":round((c[-1]/c[-6]-1)*100,2)}
     r["ma5"]=round(sum(c[-5:])/5,4); r["ma20"]=round(sum(c[-20:])/20,4)
@@ -105,5 +120,8 @@ lines=[f"## {day}",
  "数据缺当天（未计入）："+("、".join(k for k,v in {**out['index'],**out['etf'],**out['track']}.items() if v.get('STALE')) or "无"),
 ]
 if isinstance(out["margin"],list) and out["margin"]: m=out["margin"][0]; lines.append(f"融资余额（{m['date']}）：{m['rzye_yi']}亿，净买入{m['rz_net_buy_yi']}亿")
-with open("data/daily_log.md","a",encoding="utf-8") as f: f.write("\n".join(lines)+"\n\n")
+import re
+log=open("data/daily_log.md",encoding="utf-8").read() if os.path.exists("data/daily_log.md") else ""
+log=re.sub(r"## "+re.escape(day)+r"\n.*?(?=\n## |\Z)","",log,flags=re.S).strip()
+open("data/daily_log.md","w",encoding="utf-8").write((log+"\n\n" if log else "")+"\n".join(lines)+"\n")
 print("\n".join(lines))
