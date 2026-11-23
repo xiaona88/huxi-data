@@ -1,4 +1,5 @@
-import json, urllib.request, datetime
+import json, urllib.request, datetime, os
+os.makedirs("data",exist_ok=True)
 H={"User-Agent":"Mozilla/5.0","Referer":"https://finance.sina.com.cn"}
 tests={
  "sina_kline":"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sh000001&scale=240&ma=no&datalen=3",
