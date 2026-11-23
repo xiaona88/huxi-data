@@ -1,0 +1,254 @@
+{
+ "date": "2026-11-23",
+ "generated_utc": "2026-11-23T06:16:37+00:00",
+ "index": {
+  "上证": {
+   "close": 3532.92,
+   "chg%": -0.02,
+   "5d%": -1.93,
+   "ma5": 3563.348,
+   "ma20": 3628.3125,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.94
+  },
+  "上证50": {
+   "close": 2758.02,
+   "chg%": -1.0,
+   "5d%": -0.31,
+   "ma5": 2770.06,
+   "ma20": 2771.7115,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.93
+  },
+  "沪深300": {
+   "close": 3956.6,
+   "chg%": 0.05,
+   "5d%": -0.58,
+   "ma5": 3971.248,
+   "ma20": 4027.1385,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.91
+  },
+  "中证1000": {
+   "close": 5811.56,
+   "chg%": 2.88,
+   "5d%": -5.73,
+   "ma5": 5908.86,
+   "ma20": 6305.791,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.89
+  },
+  "创业板指": {
+   "close": 2282.06,
+   "chg%": 3.16,
+   "5d%": -1.64,
+   "ma5": 2278.27,
+   "ma20": 2435.6575,
+   "above_ma5": true,
+   "above_ma20": false,
+   "vol_ratio20": 0.93
+  },
+  "科创50": {
+   "close": 1227.74,
+   "chg%": -0.27,
+   "5d%": 1.16,
+   "ma5": 1239.758,
+   "ma20": 1245.102,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.91
+  }
+ },
+ "etf": {
+  "50ETF": {
+   "close": 2.875,
+   "chg%": -0.86,
+   "5d%": -0.35,
+   "ma5": 2.885,
+   "ma20": 2.8868,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.65
+  },
+  "300ETF": {
+   "close": 4.032,
+   "chg%": 0.35,
+   "5d%": -0.54,
+   "ma5": 4.042,
+   "ma20": 4.0999,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.49
+  },
+  "500ETF": {
+   "close": 6.172,
+   "chg%": 1.97,
+   "5d%": -2.56,
+   "ma5": 6.2274,
+   "ma20": 6.4769,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.73
+  },
+  "科创50ETF": {
+   "close": 1.298,
+   "chg%": -0.15,
+   "5d%": 1.25,
+   "ma5": 1.3116,
+   "ma20": 1.3154,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.84
+  },
+  "创业板ETF": {
+   "close": 2.297,
+   "chg%": 3.0,
+   "5d%": -1.59,
+   "ma5": 2.2946,
+   "ma20": 2.4514,
+   "above_ma5": true,
+   "above_ma20": false,
+   "vol_ratio20": 1.05
+  },
+  "科创半导体588170": {
+   "close": 0.684,
+   "chg%": 0.44,
+   "5d%": 3.32,
+   "ma5": 0.6924,
+   "ma20": 0.6769,
+   "above_ma5": false,
+   "above_ma20": true,
+   "vol_ratio20": 1.16
+  },
+  "通信515880": {
+   "close": 0.379,
+   "chg%": 4.7,
+   "5d%": -1.56,
+   "ma5": 0.376,
+   "ma20": 0.4203,
+   "above_ma5": true,
+   "above_ma20": false,
+   "vol_ratio20": 1.05
+  },
+  "影视516620": {
+   "close": 0.899,
+   "chg%": 6.77,
+   "5d%": -10.46,
+   "ma5": 0.883,
+   "ma20": 0.9441,
+   "above_ma5": true,
+   "above_ma20": false,
+   "vol_ratio20": 0.97
+  },
+  "机器人562500": {
+   "close": 0.814,
+   "chg%": 6.54,
+   "5d%": -1.81,
+   "ma5": 0.7968,
+   "ma20": 0.8469,
+   "above_ma5": true,
+   "above_ma20": false,
+   "vol_ratio20": 1.14
+  },
+  "红利低波512890": {
+   "close": 1.271,
+   "chg%": 0.39,
+   "5d%": 2.09,
+   "ma5": 1.2664,
+   "ma20": 1.2408,
+   "above_ma5": true,
+   "above_ma20": true,
+   "vol_ratio20": 0.69
+  }
+ },
+ "etf_alarm": [],
+ "track": {
+  "中际旭创": {
+   "close": 393.2,
+   "chg%": -3.72,
+   "5d%": -15.66,
+   "ma5": 399.974,
+   "ma20": 494.388,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.81
+  },
+  "美的集团": {
+   "close": 94.29,
+   "chg%": -0.56,
+   "5d%": 1.74,
+   "ma5": 94.22,
+   "ma20": 89.9085,
+   "above_ma5": true,
+   "above_ma20": true,
+   "vol_ratio20": 0.79
+  },
+  "川投能源": {
+   "close": 18.48,
+   "chg%": -3.45,
+   "5d%": 0.87,
+   "ma5": 18.682,
+   "ma20": 17.9235,
+   "above_ma5": false,
+   "above_ma20": true,
+   "vol_ratio20": 1.18
+  },
+  "长江电力": {
+   "close": 31.37,
+   "chg%": -0.79,
+   "5d%": 2.89,
+   "ma5": 31.03,
+   "ma20": 30.066,
+   "above_ma5": true,
+   "above_ma20": true,
+   "vol_ratio20": 1.01
+  }
+ },
+ "breadth": {
+  "stocks": 5580,
+  "up": 4529,
+  "down": 908,
+  "flat": 138,
+  "limit_up": 152,
+  "limit_down": 19,
+  "broken_limit": 30,
+  "broken_rate%": 16.5,
+  "amount_yi": 13672
+ },
+ "margin": [
+  {
+   "date": "2026-11-20",
+   "rzye_yi": 21509,
+   "rz_net_buy_yi": -418.8
+  },
+  {
+   "date": "2026-11-19",
+   "rzye_yi": 21927,
+   "rz_net_buy_yi": -155.2
+  },
+  {
+   "date": "2026-11-18",
+   "rzye_yi": 22083,
+   "rz_net_buy_yi": -88.3
+  },
+  {
+   "date": "2026-11-17",
+   "rzye_yi": 22171,
+   "rz_net_buy_yi": -186.3
+  },
+  {
+   "date": "2026-11-16",
+   "rzye_yi": 22357,
+   "rz_net_buy_yi": -214.7
+  },
+  {
+   "date": "2026-11-13",
+   "rzye_yi": 22572,
+   "rz_net_buy_yi": -166.3
+  }
+ ]
+}
