@@ -108,6 +108,66 @@ try:
 except Exception as e:
     out["margin"]={"err":repr(e)[:200]}
 
+
+# ---- 对账盘前冻结 ----
+def board(sym):
+    if sym.startswith("bj"): return "北交"
+    c=sym[2:]
+    if c.startswith(("688","689")): return "科创"
+    if c.startswith(("300","301")): return "创业"
+    return "沪主板" if sym.startswith("sh") else "深主板"
+bavg={}
+for r in rows:
+    try: bavg.setdefault(board(r["symbol"]),[]).append(float(r["changepercent"]))
+    except: pass
+bavg={k:round(sum(v)/len(v),2) for k,v in bavg.items()}
+out["board_avg%"]=bavg
+pm=f"data/premarket/{day}.json"
+if os.path.exists(pm):
+    P=json.load(open(pm,encoding="utf-8")); R={"frozen_at_bj":P["frozen_at_bj"]}
+    upr=round(b["up"]/max(1,b["up"]+b["down"])*100,1)
+    g=P["gate"]["闸门结论"]
+    R["gate"]={"盘前":g,"实际上涨家数占比%":upr,"判定":("对" if (g=="偏强" and upr>50) or (g=="偏弱" and upr<50) else ("不判" if g=="中性" else "错"))}
+    try:
+        m=json.loads(get("https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol=sh000688&scale=5&ma=no&datalen=60"))
+        t=[x for x in m if x["day"].startswith(day)]
+        pc=out["index"]["科创50"]["close"]/(1+out["index"]["科创50"]["chg%"]/100)
+        R["kc50_open_gap%"]=round((float(t[0]["open"])/pc-1)*100,2) if t else None
+    except Exception as e: R["kc50_open_gap%"]=None
+    R["open_expectation"]=P.get("open_expectation")
+    lad={}
+    for sym,x in P["etf_ladders"].items():
+        try:
+            m=json.loads(get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={sym}&scale=5&ma=no&datalen=60"))
+            bars=[y for y in m if y["day"].startswith(day)]
+        except Exception: bars=[]
+        fills=[]; 
+        for price,n in sorted(x["buy_levels"],key=lambda z:-z[0]):
+            for i,y in enumerate(bars):
+                if float(y["low"])<=price:
+                    tp=price*(1+x["take_profit"]); sold=None
+                    for z in bars[i+1:]:
+                        if float(z["high"])>=tp: sold=round(tp,4); break
+                    last=float(bars[-1]["close"])
+                    fills.append({"buy":price,"n":n,"at":y["day"][11:16],"sell":sold,"pnl%":round(((sold or last)/price-1)*100,2),"closed":sold is not None})
+                    break
+        lad[x["name"]]={"low":min([float(y["low"]) for y in bars]) if bars else None,"high":max([float(y["high"]) for y in bars]) if bars else None,"fills":fills}
+    R["etf_ladders"]=lad
+    md=[]
+    rowmap={r["symbol"]:r for r in rows}
+    for x in P.get("mentions_open",[]):
+        r=rowmap.get(x["symbol"])
+        if not r: continue
+        try:
+            chg=float(r["changepercent"]); bd=board(x["symbol"])
+            item={"name":x["name"],"symbol":x["symbol"],"chg%":round(chg,2),"board":bd,"board_avg%":bavg.get(bd),"excess%":round(chg-bavg.get(bd,0),2)}
+            if x["due"]==day and "最高价" in x["check"]:
+                item["high_vs_prev%"]=round((float(r["high"])/float(r["settlement"])-1)*100,2)
+            md.append(item)
+        except Exception: pass
+    R["mentions"]=md
+    out["reconcile"]=R
+
 json.dump(out,open(f"data/daily/{day}.json","w"),ensure_ascii=False,indent=1)
 # 人读摘要
 ix=out["index"]; b=out["breadth"]
@@ -119,6 +179,11 @@ lines=[f"## {day}",
  "破5日线："+("、".join(k for k,v in {**out['etf'],**out['track']}.items() if not v['above_ma5'] and not v.get('STALE')) or "无"),
  "数据缺当天（未计入）："+("、".join(k for k,v in {**out['index'],**out['etf'],**out['track']}.items() if v.get('STALE')) or "无"),
 ]
+if "reconcile" in out:
+    R=out["reconcile"]; lines.append(f"盘前对账：闸门{R['gate']['盘前']}，实际上涨占比{R['gate']['实际上涨家数占比%']}%（{R['gate']['判定']}）；科创50开盘{R.get('kc50_open_gap%')}%")
+    for k,v in R["etf_ladders"].items():
+        lines.append(f"  梯子 {k}：区间{v['low']}~{v['high']}，"+("；".join(f"{f['buy']}买@{f['at']}"+(f"→{f['sell']}卖" if f['closed'] else "→未卖")+f"({f['pnl%']}%)" for f in v['fills']) or "未触发"))
+    for x in R["mentions"]: lines.append(f"  点名 {x['name']}：{x['chg%']}% vs {x['board']}{x['board_avg%']}%（超额{x['excess%']}）"+(f"，最高{x['high_vs_prev%']}%" if 'high_vs_prev%' in x else ""))
 if isinstance(out["margin"],list) and out["margin"]: m=out["margin"][0]; lines.append(f"融资余额（{m['date']}）：{m['rzye_yi']}亿，净买入{m['rz_net_buy_yi']}亿")
 import re
 log=open("data/daily_log.md",encoding="utf-8").read() if os.path.exists("data/daily_log.md") else ""
