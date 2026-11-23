@@ -3,7 +3,7 @@ import json, urllib.request, datetime, os, gzip, csv, io, time
 H={"User-Agent":"Mozilla/5.0","Referer":"https://finance.sina.com.cn"}
 def get(u,tries=3):
     for i in range(tries):
-        try: return urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=30).read().decode("utf-8","replace")
+        try: return urllib.request.urlopen(urllib.request.Request(u,headers=H),timeout=15).read().decode("utf-8","replace")
         except Exception as e:
             if i==tries-1: raise
             time.sleep(2)
@@ -31,6 +31,7 @@ if day!=bj:
     json.dump(out,open(f"data/daily/{bj}_closed.json","w"),ensure_ascii=False,indent=1); raise SystemExit
 
 def stat(sym,n=30):
+    print("stat",sym,flush=True)
     d=kline(sym,n)
     if d[-1]["day"]!=day:
         time.sleep(3); d=kline(sym,n)
@@ -50,6 +51,7 @@ out["track"]={k:stat(s) for k,s in TRACK.items()}
 # 全A
 rows=[]
 for p in range(1,80):
+    if p%10==1: print("page",p,flush=True)
     a=json.loads(get(f"https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?page={p}&num=100&sort=symbol&asc=1&node=hs_a") or "[]")
     if not a: break
     rows+=a
@@ -83,6 +85,7 @@ os.makedirs("data/snapshot",exist_ok=True)
 with gzip.open(f"data/snapshot/{day}.csv.gz","wt",encoding="utf-8") as f: f.write(buf.getvalue())
 
 # 融资
+print("margin",flush=True)
 try:
     j=json.loads(get("https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPTA_RZRQ_LSHJ&columns=ALL&pageSize=6&sortColumns=DIM_DATE&sortTypes=-1"))
     d=j["result"]["data"]
