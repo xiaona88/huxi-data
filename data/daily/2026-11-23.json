@@ -1,66 +1,77 @@
 {
  "date": "2026-11-23",
- "generated_utc": "2026-11-23T06:16:37+00:00",
+ "generated_utc": "2026-11-23T07:30:13+00:00",
  "index": {
   "上证": {
-   "close": 3532.92,
-   "chg%": -0.02,
-   "5d%": -1.93,
-   "ma5": 3563.348,
-   "ma20": 3628.3125,
+   "close": 3538.95,
+   "chg%": 0.15,
+   "5d%": -1.77,
+   "ma5": 3564.554,
+   "ma20": 3628.614,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.94
+   "vol_ratio20": 1.08,
+   "data_day": "2026-11-23"
   },
   "上证50": {
-   "close": 2758.02,
-   "chg%": -1.0,
-   "5d%": -0.31,
-   "ma5": 2770.06,
-   "ma20": 2771.7115,
-   "above_ma5": false,
-   "above_ma20": false,
-   "vol_ratio20": 0.93
+   "close": 2785.921,
+   "chg%": 0.45,
+   "5d%": 0.39,
+   "ma5": 2771.7712,
+   "ma20": 2772.2634,
+   "above_ma5": true,
+   "above_ma20": true,
+   "vol_ratio20": 1.26,
+   "data_day": "2026-11-20",
+   "STALE": true
   },
   "沪深300": {
-   "close": 3956.6,
-   "chg%": 0.05,
-   "5d%": -0.58,
-   "ma5": 3971.248,
-   "ma20": 4027.1385,
+   "close": 3954.565,
+   "chg%": -0.76,
+   "5d%": -1.54,
+   "ma5": 3975.8878,
+   "ma20": 4034.4851,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.91
+   "vol_ratio20": 1.1,
+   "data_day": "2026-11-20",
+   "STALE": true
   },
   "中证1000": {
-   "close": 5811.56,
-   "chg%": 2.88,
-   "5d%": -5.73,
-   "ma5": 5908.86,
-   "ma20": 6305.791,
+   "close": 5648.627,
+   "chg%": -4.89,
+   "5d%": -11.15,
+   "ma5": 5979.4742,
+   "ma20": 6346.7518,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.89
+   "vol_ratio20": 0.92,
+   "data_day": "2026-11-20",
+   "STALE": true
   },
   "创业板指": {
-   "close": 2282.06,
-   "chg%": 3.16,
-   "5d%": -1.64,
-   "ma5": 2278.27,
-   "ma20": 2435.6575,
-   "above_ma5": true,
-   "above_ma20": false,
-   "vol_ratio20": 0.93
-  },
-  "科创50": {
-   "close": 1227.74,
-   "chg%": -0.27,
-   "5d%": 1.16,
-   "ma5": 1239.758,
-   "ma20": 1245.102,
+   "close": 2212.127,
+   "chg%": -3.54,
+   "5d%": -8.82,
+   "ma5": 2285.8628,
+   "ma20": 2453.4662,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.91
+   "vol_ratio20": 0.91,
+   "data_day": "2026-11-20",
+   "STALE": true
+  },
+  "科创50": {
+   "close": 1231.089,
+   "chg%": -3.12,
+   "5d%": -3.8,
+   "ma5": 1236.9464,
+   "ma20": 1249.4896,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 1.04,
+   "data_day": "2026-11-20",
+   "STALE": true
   }
  },
  "etf": {
@@ -72,27 +83,30 @@
    "ma20": 2.8868,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.65
+   "vol_ratio20": 0.87,
+   "data_day": "2026-11-23"
   },
   "300ETF": {
-   "close": 4.032,
-   "chg%": 0.35,
-   "5d%": -0.54,
-   "ma5": 4.042,
-   "ma20": 4.0999,
+   "close": 4.023,
+   "chg%": 0.12,
+   "5d%": -0.76,
+   "ma5": 4.0402,
+   "ma20": 4.0995,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.49
+   "vol_ratio20": 0.68,
+   "data_day": "2026-11-23"
   },
   "500ETF": {
-   "close": 6.172,
-   "chg%": 1.97,
-   "5d%": -2.56,
-   "ma5": 6.2274,
-   "ma20": 6.4769,
+   "close": 6.16,
+   "chg%": 1.77,
+   "5d%": -2.75,
+   "ma5": 6.225,
+   "ma20": 6.4763,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.73
+   "vol_ratio20": 0.82,
+   "data_day": "2026-11-23"
   },
   "科创50ETF": {
    "close": 1.298,
@@ -102,122 +116,133 @@
    "ma20": 1.3154,
    "above_ma5": false,
    "above_ma20": false,
-   "vol_ratio20": 0.84
+   "vol_ratio20": 0.94,
+   "data_day": "2026-11-23"
   },
   "创业板ETF": {
-   "close": 2.297,
-   "chg%": 3.0,
-   "5d%": -1.59,
-   "ma5": 2.2946,
-   "ma20": 2.4514,
+   "close": 2.295,
+   "chg%": 2.91,
+   "5d%": -1.67,
+   "ma5": 2.2942,
+   "ma20": 2.4512,
    "above_ma5": true,
    "above_ma20": false,
-   "vol_ratio20": 1.05
+   "vol_ratio20": 1.18,
+   "data_day": "2026-11-23"
   },
   "科创半导体588170": {
-   "close": 0.684,
-   "chg%": 0.44,
-   "5d%": 3.32,
-   "ma5": 0.6924,
-   "ma20": 0.6769,
+   "close": 0.681,
+   "chg%": 0.0,
+   "5d%": 2.87,
+   "ma5": 0.6918,
+   "ma20": 0.6767,
    "above_ma5": false,
    "above_ma20": true,
-   "vol_ratio20": 1.16
+   "vol_ratio20": 1.31,
+   "data_day": "2026-11-23"
   },
   "通信515880": {
-   "close": 0.379,
-   "chg%": 4.7,
-   "5d%": -1.56,
-   "ma5": 0.376,
-   "ma20": 0.4203,
+   "close": 0.381,
+   "chg%": 5.25,
+   "5d%": -1.04,
+   "ma5": 0.3764,
+   "ma20": 0.4204,
    "above_ma5": true,
    "above_ma20": false,
-   "vol_ratio20": 1.05
+   "vol_ratio20": 1.2,
+   "data_day": "2026-11-23"
   },
   "影视516620": {
-   "close": 0.899,
-   "chg%": 6.77,
-   "5d%": -10.46,
-   "ma5": 0.883,
+   "close": 0.9,
+   "chg%": 6.89,
+   "5d%": -10.36,
+   "ma5": 0.8832,
    "ma20": 0.9441,
    "above_ma5": true,
    "above_ma20": false,
-   "vol_ratio20": 0.97
+   "vol_ratio20": 1.21,
+   "data_day": "2026-11-23"
   },
   "机器人562500": {
-   "close": 0.814,
-   "chg%": 6.54,
-   "5d%": -1.81,
-   "ma5": 0.7968,
-   "ma20": 0.8469,
+   "close": 0.815,
+   "chg%": 6.68,
+   "5d%": -1.69,
+   "ma5": 0.797,
+   "ma20": 0.847,
    "above_ma5": true,
    "above_ma20": false,
-   "vol_ratio20": 1.14
+   "vol_ratio20": 1.34,
+   "data_day": "2026-11-23"
   },
   "红利低波512890": {
-   "close": 1.271,
-   "chg%": 0.39,
-   "5d%": 2.09,
-   "ma5": 1.2664,
-   "ma20": 1.2408,
-   "above_ma5": true,
+   "close": 1.256,
+   "chg%": -1.18,
+   "5d%": -0.55,
+   "ma5": 1.265,
+   "ma20": 1.2429,
+   "above_ma5": false,
    "above_ma20": true,
-   "vol_ratio20": 0.69
+   "vol_ratio20": 0.78,
+   "data_day": "2026-11-23"
   }
  },
  "etf_alarm": [],
  "track": {
   "中际旭创": {
-   "close": 393.2,
-   "chg%": -3.72,
-   "5d%": -15.66,
-   "ma5": 399.974,
-   "ma20": 494.388,
-   "above_ma5": false,
+   "close": 417.2,
+   "chg%": 6.1,
+   "5d%": 2.01,
+   "ma5": 401.62,
+   "ma20": 485.523,
+   "above_ma5": true,
    "above_ma20": false,
-   "vol_ratio20": 0.81
+   "vol_ratio20": 1.21,
+   "data_day": "2026-11-23"
   },
   "美的集团": {
-   "close": 94.29,
-   "chg%": -0.56,
-   "5d%": 1.74,
-   "ma5": 94.22,
-   "ma20": 89.9085,
-   "above_ma5": true,
-   "above_ma20": true,
-   "vol_ratio20": 0.79
-  },
-  "川投能源": {
-   "close": 18.48,
-   "chg%": -3.45,
-   "5d%": 0.87,
-   "ma5": 18.682,
-   "ma20": 17.9235,
+   "close": 94.13,
+   "chg%": -0.73,
+   "5d%": 1.56,
+   "ma5": 94.188,
+   "ma20": 89.9005,
    "above_ma5": false,
    "above_ma20": true,
-   "vol_ratio20": 1.18
+   "vol_ratio20": 0.98,
+   "data_day": "2026-11-23"
+  },
+  "川投能源": {
+   "close": 18.53,
+   "chg%": -3.19,
+   "5d%": 1.15,
+   "ma5": 18.692,
+   "ma20": 17.926,
+   "above_ma5": false,
+   "above_ma20": true,
+   "vol_ratio20": 1.44,
+   "data_day": "2026-11-23"
   },
   "长江电力": {
-   "close": 31.37,
-   "chg%": -0.79,
-   "5d%": 2.89,
-   "ma5": 31.03,
-   "ma20": 30.066,
+   "close": 31.35,
+   "chg%": -0.85,
+   "5d%": 2.82,
+   "ma5": 31.026,
+   "ma20": 30.065,
    "above_ma5": true,
    "above_ma20": true,
-   "vol_ratio20": 1.01
+   "vol_ratio20": 1.21,
+   "data_day": "2026-11-23"
   }
  },
  "breadth": {
   "stocks": 5580,
-  "up": 4529,
-  "down": 908,
-  "flat": 138,
-  "limit_up": 152,
-  "limit_down": 19,
+  "up": 4658,
+  "down": 782,
+  "flat": 135,
+  "limit_up": 163,
+  "limit_down": 21,
   "broken_limit": 30,
-  "broken_rate%": 16.5,
-  "amount_yi": 13672
+  "broken_rate%": 15.5,
+  "amount_yi": 15637
  },
  "margin": [
   {
