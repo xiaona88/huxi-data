@@ -8,7 +8,13 @@ def get(u,tries=3):
             if i==tries-1: raise
             time.sleep(2)
 def kline(sym,n=30):
-    return json.loads(get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={sym}&scale=240&ma=no&datalen={n}"))
+    """东方财富日K（盘中即含当天），失败时退回新浪。"""
+    secid=("1." if sym.startswith("sh") else "0.")+sym[2:]
+    try:
+        j=json.loads(get(f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1&fields2=f51,f52,f53,f54,f55,f56&klt=101&fqt=0&end=20500101&lmt={n}"))
+        return [dict(zip(["day","open","close","high","low","volume"],k.split(","))) for k in j["data"]["klines"]]
+    except Exception:
+        return json.loads(get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={sym}&scale=240&ma=no&datalen={n}"))
 
 INDEX={"上证":"sh000001","上证50":"sh000016","沪深300":"sh000300","中证1000":"sh000852","创业板指":"sz399006","科创50":"sh000688"}
 ETF={"50ETF":"sh510050","300ETF":"sh510300","500ETF":"sh510500","科创50ETF":"sh588000","创业板ETF":"sz159915",
