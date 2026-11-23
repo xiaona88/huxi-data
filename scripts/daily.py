@@ -31,11 +31,16 @@ if day!=bj:
     json.dump(out,open(f"data/daily/{bj}_closed.json","w"),ensure_ascii=False,indent=1); raise SystemExit
 
 def stat(sym,n=30):
-    d=kline(sym,n); c=[float(x["close"]) for x in d]; v=[float(x["volume"]) for x in d]
+    d=kline(sym,n)
+    if d[-1]["day"]!=day:
+        time.sleep(3); d=kline(sym,n)
+    c=[float(x["close"]) for x in d]; v=[float(x["volume"]) for x in d]
     r={"close":c[-1],"chg%":round((c[-1]/c[-2]-1)*100,2),"5d%":round((c[-1]/c[-6]-1)*100,2)}
     r["ma5"]=round(sum(c[-5:])/5,4); r["ma20"]=round(sum(c[-20:])/20,4)
     r["above_ma5"]=c[-1]>=r["ma5"]; r["above_ma20"]=c[-1]>=r["ma20"]
     r["vol_ratio20"]=round(v[-1]/(sum(v[-21:-1])/20),2)
+    r["data_day"]=d[-1]["day"]
+    if d[-1]["day"]!=day: r["STALE"]=True
     return r
 out["index"]={k:stat(s) for k,s in INDEX.items()}
 out["etf"]={k:stat(s) for k,s in ETF.items()}
@@ -93,7 +98,8 @@ lines=[f"## {day}",
  f"全A：涨{b['up']} 跌{b['down']}，涨停{b['limit_up']} 跌停{b['limit_down']}，炸板率{b['broken_rate%']}%，成交约{b['amount_yi']}亿",
  "ETF量比："+"，".join(f"{k}{v['vol_ratio20']}" for k,v in out["etf"].items()),
  "宽基放量报警："+("、".join(out["etf_alarm"]) or "无"),
- "破5日线："+("、".join(k for k,v in {**out['etf'],**out['track']}.items() if not v['above_ma5']) or "无"),
+ "破5日线："+("、".join(k for k,v in {**out['etf'],**out['track']}.items() if not v['above_ma5'] and not v.get('STALE')) or "无"),
+ "数据缺当天（未计入）："+("、".join(k for k,v in {**out['index'],**out['etf'],**out['track']}.items() if v.get('STALE')) or "无"),
 ]
 if isinstance(out["margin"],list) and out["margin"]: m=out["margin"][0]; lines.append(f"融资余额（{m['date']}）：{m['rzye_yi']}亿，净买入{m['rz_net_buy_yi']}亿")
 with open("data/daily_log.md","a",encoding="utf-8") as f: f.write("\n".join(lines)+"\n\n")
