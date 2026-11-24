@@ -4,6 +4,7 @@
 规则（全部①级，来源见知识库第3节）：
   通用：剔除ST、北交所、流通市值<50亿（他：'盘子太小=量化短线不碰'）、历史不足250天。
   E1 超跌龙头（他：龙头超跌性价比、'三折'、低位）：流通≥200亿；收盘≤250日最高的50%；最近3天低点逐日抬高（'观察三天在筑底'）；收盘≥5日线。
+  E1b（11-24 用户提出的并行变体，不替换E1）：同E1但流通门槛降到100亿，只收E1没收到的。两版并行，看哪版更像他、哪版收益更好。
   E2 横有多长竖有多高：60日箱体振幅≤35%；250日内最高≥最低×2（前期暴涨过）；收盘≤250日最高的60%；20日均量<60日均量×0.8（缩量）。
   E3 趋势股（他：贴5日线不走、年线上；11-13趋势组②1次）：流通≥100亿；收盘>250日线；20日日收益标准差<2%；收盘距20日线±2%以内（踩20日线）。
 每条取前3名。数据：新浪不复权日K为主（遇除权会失真，已知缺陷）。"""
@@ -38,9 +39,10 @@ def checks(sym,f,m):
     nm=m.get("name",""); fl=m.get("nmc_yi",0)
     base={"非ST":"ST" not in nm,"非北交":not sym.startswith("bj"),"流通≥50亿":fl>=50}
     e1={"流通≥200亿":fl>=200,"收盘≤250日高50%":f["close"]<=0.5*f["hi250"],"3天低点抬高":f["low3_up"],"收盘≥5日线":f["close"]>=f["ma5"]}
+    e1b={"流通≥100亿":fl>=100,"收盘≤250日高50%":f["close"]<=0.5*f["hi250"],"3天低点抬高":f["low3_up"],"收盘≥5日线":f["close"]>=f["ma5"]}
     e2={"60日箱体≤35%":f["box60"]<=0.35,"曾暴涨(高≥低×2)":f["hi250"]>=2*f["lo250"],"收盘≤250日高60%":f["close"]<=0.6*f["hi250"],"缩量(20/60<0.8)":f["vol20_60"]<0.8}
     e3={"流通≥100亿":fl>=100,"收盘>年线":f["close"]>f["ma250"],"20日波动<2%":f["sd20"]<0.02,"距20日线±2%":abs(f["close"]/f["ma20"]-1)<=0.02}
-    return base,e1,e2,e3
+    return base,e1,e1b,e2,e3
 def main():
     H,meta=load()
     if len(sys.argv)>1 and sys.argv[1]=="diag":
@@ -49,21 +51,22 @@ def main():
             if s not in H: print(s,"无历史数据（回填未覆盖）"); continue
             f=feats(H[s],upto)
             if not f: print(s,"历史不足250天"); continue
-            b,e1,e2,e3=checks(s,f,meta.get(s,{}))
+            b,e1,e1b,e2,e3=checks(s,f,meta.get(s,{}))
             def fmt(d): return " ".join(("✓" if v else "✗")+k for k,v in d.items())
-            print(s,meta.get(s,{}).get("name",""),f["day"],"| 通用:",fmt(b),"| E1:",fmt(e1),"| E2:",fmt(e2),"| E3:",fmt(e3))
+            print(s,meta.get(s,{}).get("name",""),f["day"],"| 通用:",fmt(b),"| E1:",fmt(e1),"| E1b:",fmt(e1b),"| E2:",fmt(e2),"| E3:",fmt(e3))
         return
-    out={"generated_bj":datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat(timespec="seconds"),"E1":[],"E2":[],"E3":[]}
+    out={"generated_bj":datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat(timespec="seconds"),"E1":[],"E1b":[],"E2":[],"E3":[]}
     for s,bars in H.items():
         f=feats(bars)
         if not f: continue
-        b,e1,e2,e3=checks(s,f,meta.get(s,{}))
+        b,e1,e1b,e2,e3=checks(s,f,meta.get(s,{}))
         if not all(b.values()): continue
         nm=meta.get(s,{}).get("name",""); fl=meta.get(s,{}).get("nmc_yi",0)
         if all(e1.values()): out["E1"].append((f["close"]/f["hi250"],s,nm,round(fl)))
+        if all(e1b.values()) and not all(e1.values()): out["E1b"].append((f["close"]/f["hi250"],s,nm,round(fl)))
         if all(e2.values()): out["E2"].append((f["box60"],s,nm,round(fl)))
         if all(e3.values()): out["E3"].append((f["sd20"],s,nm,round(fl)))
-    for k in ["E1","E2","E3"]:
+    for k in ["E1","E1b","E2","E3"]:
         out[k+"_n"]=len(out[k]); out[k]=[{"symbol":x[1],"name":x[2],"float_yi":x[3],"score":round(x[0],4)} for x in sorted(out[k])[:3]]
     os.makedirs("data/screener",exist_ok=True)
     day=out["generated_bj"][:10]
