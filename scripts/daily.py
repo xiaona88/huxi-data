@@ -112,6 +112,19 @@ except Exception as e:
     out["margin"]={"err":repr(e)[:200]}
 
 
+# ---- 板块资金流（东方财富按单子大小分：主力=超大单+大单，小单≈散户；是代理指标，算法拆单会让它失真）----
+print("fflow",flush=True)
+BK={"BK0475":"银行","BK0474":"保险","BK0473":"证券","BK1036":"半导体","BK0448":"通信设备","BK0459":"元件","BK0737":"软件开发","BK1037":"消费电子","BK0727":"医疗服务","BK0438":"食品饮料","BK0478":"有色金属","BK0486":"文化传媒"}
+ff={}
+for k,n in BK.items():
+    try:
+        time.sleep(0.8)
+        j=json.loads(get(f"https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=1&klt=101&secid=90.{k}&fields1=f1&fields2=f51,f52,f53,f54,f55,f56,f57"))
+        x=j["data"]["klines"][-1].split(",")
+        if x[0]==day: ff[n]={"主力亿":round(float(x[1])/1e8,1),"小单亿":round(float(x[2])/1e8,1),"中单亿":round(float(x[3])/1e8,1),"主力占比%":float(x[6])}
+    except Exception as e: ff[n]={"err":repr(e)[:80]}
+out["sector_fflow"]=ff
+
 # ---- 对账盘前冻结 ----
 def board(sym):
     if sym.startswith("bj"): return "北交"
@@ -182,6 +195,8 @@ lines=[f"## {day}",
  "破5日线："+("、".join(k for k,v in {**out['etf'],**out['track']}.items() if not v['above_ma5'] and not v.get('STALE')) or "无"),
  "数据缺当天（未计入）："+("、".join(k for k,v in {**out['index'],**out['etf'],**out['track']}.items() if v.get('STALE')) or "无"),
 ]
+_ff=[(k,v) for k,v in out.get("sector_fflow",{}).items() if "主力亿" in v]
+if _ff: lines.append("板块资金流（主力/小单，亿）："+"，".join(f"{k}{v['主力亿']:+}/{v['小单亿']:+}" for k,v in sorted(_ff,key=lambda z:-z[1]['主力亿'])))
 if "reconcile" in out:
     R=out["reconcile"]; lines.append(f"盘前对账：闸门{R['gate']['盘前']}，实际上涨占比{R['gate']['实际上涨家数占比%']}%（{R['gate']['判定']}）；科创50开盘{R.get('kc50_open_gap%')}%")
     for k,v in R["etf_ladders"].items():
