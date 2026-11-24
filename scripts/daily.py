@@ -119,8 +119,9 @@ ff={}
 for k,n in BK.items():
     try:
         time.sleep(0.8)
-        j=json.loads(get(f"https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=1&klt=101&secid=90.{k}&fields1=f1&fields2=f51,f52,f53,f54,f55,f56,f57"))
+        j=json.loads(get(f"https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=1&klt=101&secid=90.{k}&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57"))
         x=j["data"]["klines"][-1].split(",")
+        n=j["data"].get("name") or n   # 用接口返回的板块名，防止代码对错
         if x[0]==day: ff[n]={"主力亿":round(float(x[1])/1e8,1),"小单亿":round(float(x[2])/1e8,1),"中单亿":round(float(x[3])/1e8,1),"主力占比%":float(x[6])}
     except Exception as e: ff[n]={"err":repr(e)[:80]}
 out["sector_fflow"]=ff
