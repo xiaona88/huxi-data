@@ -1,0 +1,14 @@
+name: papertest
+on:
+  workflow_dispatch:
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -u scripts/paper.py
+        env:
+          TODAY: '2026-11-24'
+          PAPER_START: '2026-11-24'
+          PAPER_DIR: '/tmp/papertest'
