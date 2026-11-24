@@ -6,7 +6,8 @@ on:
         description: '测试用：指定日期'
         required: false
   schedule:
-    - cron: '33 0 * * 1-5'   # 北京时间 08:33
+    - cron: '3,18,33,48 0 * * 1-5'   # 北京 08:03~08:48 每15分钟一次，GitHub 定时常延迟，多跑几次；已冻结则跳过
+    - cron: '3,18 1 * * 1-5'   # 09:03、09:18 兜底
 permissions:
   contents: write
 jobs:

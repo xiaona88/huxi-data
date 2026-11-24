@@ -2,7 +2,8 @@ name: daily
 on:
   workflow_dispatch:
   schedule:
-    - cron: '47 7 * * 1-5'   # 北京时间 15:47
+    - cron: '17,32,47 7 * * 1-5'   # 北京 15:17~15:47
+    - cron: '2,17,32 8 * * 1-5'    # 16:02~16:32 兜底；当天已完成则跳过
 permissions:
   contents: write
 jobs:
@@ -12,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 -u scripts/daily.py
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
       - run: |
           git config user.name "daily-bot"; git config user.email "daily@users.noreply.github.com"
           git add data; git commit -m "daily $(date -u +%F)" || true; git pull --rebase -q || true; git push

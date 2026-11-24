@@ -22,7 +22,10 @@ ETF={"50ETF":"sh510050","300ETF":"sh510300","500ETF":"sh510500","科创50ETF":"s
 TRACK={"中际旭创":"sz300308","美的集团":"sz000333","川投能源":"sh600674","长江电力":"sh600900"}
 
 os.makedirs("data/daily",exist_ok=True)
-bj=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
+_now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
+bj=_now.date().isoformat()
+if (_now.hour,_now.minute)<(15,5) and not os.environ.get("FORCE"): raise SystemExit("before close, skip")
+if os.path.exists(f"data/daily/{bj}.json") and not os.environ.get("FORCE"): raise SystemExit("already done today")
 ref=kline("sh000001",2)
 day=ref[-1]["day"]
 if day!=bj:
@@ -32,7 +35,7 @@ out={"date":day,"generated_utc":datetime.datetime.now(datetime.timezone.utc).iso
 bj=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).date().isoformat()
 if day!=bj:
     out["note"]=f"今天({bj})没有新K线，可能休市"
-    json.dump(out,open(f"data/daily/{bj}_closed.json","w"),ensure_ascii=False,indent=1); raise SystemExit
+    print(out["note"]); raise SystemExit
 
 def today_from_5min(sym):
     """用新浪5分钟线拼出当天日K（新浪日K收盘后要晚些才更新）。"""
