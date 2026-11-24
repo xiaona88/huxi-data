@@ -128,7 +128,7 @@ out["board_avg%"]=bavg
 pm=f"data/premarket/{day}.json"
 if os.path.exists(pm):
     P=json.load(open(pm,encoding="utf-8")); R={"frozen_at_bj":P["frozen_at_bj"]}
-    upr=round(b["up"]/max(1,b["up"]+b["down"])*100,1)
+    _b=out["breadth"]; upr=round(_b["up"]/max(1,_b["up"]+_b["down"])*100,1)
     g=P["gate"]["闸门结论"]
     R["gate"]={"盘前":g,"实际上涨家数占比%":upr,"判定":("对" if (g=="偏强" and upr>50) or (g=="偏弱" and upr<50) else ("不判" if g=="中性" else "错"))}
     try:
