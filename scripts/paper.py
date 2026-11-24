@@ -52,6 +52,7 @@ for s in ETF:
     pc,ma20=prev_close_and_ma20(s)
     f=A["flags"].setdefault(s,{"base":False,"lad":[],"buyback":None})
     sold_today=False
+    avail=A["pos"].get(s,{}).get("sh",0)   # T+1：只有开盘前已持有的份额能卖
     if s=="sh588170": levels=[(0.65,0.05,"梯子0.65"),(0.60,0.10,"梯子0.60")]
     else: levels=[(round(ma20*0.95,3),0.05,"均线下5%"),(round(ma20*0.90,3),0.10,"均线下10%")]
     for b in B5:
@@ -66,8 +67,8 @@ for s in ETF:
             px=min(f["buyback"]["px"],b["o"])
             if buy(A,s,f["buyback"]["sh"],px,"接回",by_shares=True,prices=prices,cap=0.60): f["buyback"]=None
         p=A["pos"].get(s)
-        if p and p["sh"]>=300 and not f["buyback"] and not sold_today and b["h"]>=pc*1.03:
-            px=max(pc*1.03,b["o"]); sh=int(p["sh"]/3/100)*100
+        if p and avail>=300 and not f["buyback"] and not sold_today and b["h"]>=pc*1.03:
+            px=max(pc*1.03,b["o"]); sh=int(avail/3/100)*100
             if sell(A,s,sh,px,"冲高卖1/3"):
                 sold_today=True; f["buyback"]={"sh":sh,"px":round(min(px*0.97,pc),3)}
     if A["pos"].get(s): A["pos"][s]["last"]=prices.get(s,0)
