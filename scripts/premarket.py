@@ -13,13 +13,13 @@ os.makedirs("data/premarket",exist_ok=True)
 _f=f"data/premarket/{today}.json"
 if os.path.exists(_f) and not os.environ.get("TODAY"):
     _o=json.load(open(_f,encoding="utf-8"))
-    if _o.get("frozen_at_bj","")[:10]==today: raise SystemExit("already frozen this morning")
+    if _o.get("frozen_at_bj","")[:10]==today: print("already frozen this morning"); raise SystemExit(0)
 if not os.environ.get("TODAY") and (bj.hour,bj.minute)>=(9,25):
-    raise SystemExit("too late to freeze (>=09:25), skip")
+    print("too late to freeze (>=09:25), skip"); raise SystemExit(0)
 plan=json.load(open("data/plan.json",encoding="utf-8"))
 days=sorted(f[:-5] for f in os.listdir("data/daily") if f.endswith(".json") and f[:4].isdigit() and len(f)==15)
 prev=[d for d in days if d<today]
-if not prev: raise SystemExit("no previous daily")
+if not prev: print("no previous daily"); raise SystemExit(0)
 pd=prev[-1]; D=json.load(open(f"data/daily/{pd}.json",encoding="utf-8"))
 out={"date":today,"frozen_at_bj":bj.isoformat(timespec="seconds"),"based_on":pd}
 
