@@ -1,0 +1,8 @@
+{"_说明":"价位提醒表。source：他说=他在群里报的价位；用户=用户自己定的；规则=按他的规则自动算的（不在此表，由 levels_check.py 每天算）。check：close=收盘价、low=当日最低、high=当日最高；dir：below=跌到/跌破，above=涨到/突破。触发后记 triggered 日期，不删除；同一条只提醒一次，除非 repeat=true。",
+"levels":[
+ {"id":"U1","symbol":"sh600186","name":"莲花控股","source":"用户","dir":"below","check":"close","level":8.80,"said":"2026-11-25","note":"用户9.30买入后定的离场线：收盘跌破8.80（11-25最低点≈11-18涨停价8.98/年线8.88下方）就走","repeat":false},
+ {"id":"H1","symbol":"sh588170","name":"科创半导体ETF","source":"他说","dir":"below","check":"low","level":0.65,"said":"2026-11-20","note":"他的梯子：0.65 双倍加","repeat":false},
+ {"id":"H2","symbol":"sh588170","name":"科创半导体ETF","source":"他说","dir":"below","check":"low","level":0.60,"said":"2026-11-20","note":"他的梯子：0.60 四倍加","repeat":false},
+ {"id":"H3","symbol":"sz300308","name":"中际旭创","source":"他说","dir":"below","check":"low","level":380,"said":"2026-11-16","note":"'快到我建仓价格380''380是底'；跌破377.96即预测H4失败","repeat":false},
+ {"id":"H4","symbol":"sh600186","name":"莲花控股","source":"他说","dir":"below","check":"low","level":9.00,"said":"2026-11-24","note":"'莲花9元以下大胆吸'（他是13元被套持有人）；11-25已跌破，09:56他说'可以看了'","repeat":false,"triggered":"2026-11-25"}
+]}
