@@ -36,4 +36,7 @@ if alert:
 纸面账户 G 按规则处理；用户本人不实盘（项目规则：只做纸面）。
 """
     open(f"data/signal/ALERT_{today}.md","w").write(txt)
+    try:
+        with open("data/daily_log.md","a",encoding="utf-8") as f: f.write(f"\n**⚠ 底部信号检查 {today}：** "+"；".join(alert)+"（详见 data/signal/ALERT_"+today+".md）\n")
+    except Exception: pass
 print(json.dumps(out,ensure_ascii=False))
