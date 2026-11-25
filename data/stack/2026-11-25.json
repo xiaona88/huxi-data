@@ -1,0 +1,52 @@
+{
+ "date": "2026-11-25",
+ "gate": {
+  "全A等权5日%": -7.98,
+  "通过": false
+ },
+ "picks": [],
+ "candidates_n": 4,
+ "candidates": [
+  {
+   "symbol": "sz000593",
+   "name": "德龙汇能",
+   "ind": "供水供气",
+   "close": 20.54,
+   "limit_buy": 20.54,
+   "stop": 18.875,
+   "lastzt": 19.26,
+   "ind_rank5": 0.87
+  },
+  {
+   "symbol": "sh603131",
+   "name": "上海沪工",
+   "ind": "",
+   "close": 13.04,
+   "limit_buy": 13.04,
+   "stop": 12.75,
+   "lastzt": 13.01,
+   "ind_rank5": null
+  },
+  {
+   "symbol": "sh603595",
+   "name": "ST东尼",
+   "ind": "",
+   "close": 27.36,
+   "limit_buy": 27.36,
+   "stop": 25.95,
+   "lastzt": 26.48,
+   "ind_rank5": null
+  },
+  {
+   "symbol": "sh688608",
+   "name": "恒玄科技",
+   "ind": "",
+   "close": 106.5,
+   "limit_buy": 106.5,
+   "stop": 104.194,
+   "lastzt": 106.32,
+   "ind_rank5": null
+  }
+ ],
+ "rules": "明天挂limit_buy，碰到才买；收盘跌破stop就走；冲高+8%先卖一半；最多5个交易日"
+}

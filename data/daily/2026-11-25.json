@@ -1,0 +1,443 @@
+{
+ "date": "2026-11-25",
+ "generated_utc": "2026-11-25T07:20:44+00:00",
+ "index": {
+  "上证": {
+   "close": 3476.47,
+   "chg%": -2.03,
+   "5d%": -3.1,
+   "ma5": 3535.0394,
+   "ma20": 3613.3681,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.98,
+   "data_day": "2026-11-25"
+  },
+  "上证50": {
+   "close": 2751.85,
+   "chg%": -0.82,
+   "5d%": -0.46,
+   "ma5": 2769.5632,
+   "ma20": 2773.2424,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.98,
+   "data_day": "2026-11-25"
+  },
+  "沪深300": {
+   "close": 3898.24,
+   "chg%": -1.65,
+   "5d%": -2.15,
+   "ma5": 3951.952,
+   "ma20": 4013.655,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.95,
+   "data_day": "2026-11-25"
+  },
+  "中证1000": {
+   "close": 5541.55,
+   "chg%": -4.44,
+   "5d%": -8.45,
+   "ma5": 5748.0824,
+   "ma20": 6222.5936,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.87,
+   "data_day": "2026-11-25"
+  },
+  "创业板指": {
+   "close": 2183.584,
+   "chg%": -4.19,
+   "5d%": -5.54,
+   "ma5": 2249.6502,
+   "ma20": 2399.5484,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.89,
+   "data_day": "2026-11-25"
+  },
+  "科创50": {
+   "close": 1186.142,
+   "chg%": -5.12,
+   "5d%": -4.96,
+   "ma5": 1233.1984,
+   "ma20": 1240.1602,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.95,
+   "data_day": "2026-11-25"
+  }
+ },
+ "etf": {
+  "50ETF": {
+   "close": 2.857,
+   "chg%": -1.07,
+   "5d%": -0.9,
+   "ma5": 2.8806,
+   "ma20": 2.8876,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 1.91,
+   "data_day": "2026-11-25"
+  },
+  "300ETF": {
+   "close": 3.97,
+   "chg%": -1.56,
+   "5d%": -2.17,
+   "ma5": 4.0208,
+   "ma20": 4.0858,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.98,
+   "data_day": "2026-11-25"
+  },
+  "500ETF": {
+   "close": 5.922,
+   "chg%": -3.33,
+   "5d%": -6.13,
+   "ma5": 6.1094,
+   "ma20": 6.4183,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 1.85,
+   "data_day": "2026-11-25"
+  },
+  "科创50ETF": {
+   "close": 1.254,
+   "chg%": -4.93,
+   "5d%": -5.14,
+   "ma5": 1.303,
+   "ma20": 1.3104,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.82,
+   "data_day": "2026-11-25"
+  },
+  "创业板ETF": {
+   "close": 2.199,
+   "chg%": -4.06,
+   "5d%": -5.54,
+   "ma5": 2.2648,
+   "ma20": 2.4152,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 1.01,
+   "data_day": "2026-11-25"
+  },
+  "科创半导体588170": {
+   "close": 0.631,
+   "chg%": -8.02,
+   "5d%": -9.47,
+   "ma5": 0.6786,
+   "ma20": 0.6764,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 1.05,
+   "data_day": "2026-11-25"
+  },
+  "通信515880": {
+   "close": 0.373,
+   "chg%": -2.86,
+   "5d%": -2.36,
+   "ma5": 0.376,
+   "ma20": 0.4093,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.93,
+   "data_day": "2026-11-25"
+  },
+  "影视516620": {
+   "close": 0.847,
+   "chg%": -5.04,
+   "5d%": -5.15,
+   "ma5": 0.868,
+   "ma20": 0.9408,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.67,
+   "data_day": "2026-11-25"
+  },
+  "机器人562500": {
+   "close": 0.776,
+   "chg%": -4.9,
+   "5d%": -3.0,
+   "ma5": 0.7934,
+   "ma20": 0.8396,
+   "above_ma5": false,
+   "above_ma20": false,
+   "vol_ratio20": 0.76,
+   "data_day": "2026-11-25"
+  },
+  "红利低波512890": {
+   "close": 1.255,
+   "chg%": 0.0,
+   "5d%": -1.1,
+   "ma5": 1.2606,
+   "ma20": 1.2463,
+   "above_ma5": false,
+   "above_ma20": true,
+   "vol_ratio20": 0.82,
+   "data_day": "2026-11-25"
+  }
+ },
+ "etf_alarm": [],
+ "track": {
+  "中际旭创": {
+   "close": 409.0,
+   "chg%": -1.92,
+   "5d%": 3.2,
+   "ma5": 408.96,
+   "ma20": 466.158,
+   "above_ma5": true,
+   "above_ma20": false,
+   "vol_ratio20": 0.83,
+   "data_day": "2026-11-25"
+  },
+  "美的集团": {
+   "close": 94.14,
+   "chg%": -0.1,
+   "5d%": 0.52,
+   "ma5": 94.466,
+   "ma20": 90.7715,
+   "above_ma5": false,
+   "above_ma20": true,
+   "vol_ratio20": 0.93,
+   "data_day": "2026-11-25"
+  },
+  "川投能源": {
+   "close": 18.45,
+   "chg%": -0.97,
+   "5d%": -1.23,
+   "ma5": 18.672,
+   "ma20": 18.008,
+   "above_ma5": false,
+   "above_ma20": true,
+   "vol_ratio20": 0.85,
+   "data_day": "2026-11-25"
+  },
+  "长江电力": {
+   "close": 31.96,
+   "chg%": 1.01,
+   "5d%": 4.17,
+   "ma5": 31.49,
+   "ma20": 30.2835,
+   "above_ma5": true,
+   "above_ma20": true,
+   "vol_ratio20": 1.13,
+   "data_day": "2026-11-25"
+  }
+ },
+ "breadth": {
+  "stocks": 5580,
+  "up": 586,
+  "down": 4925,
+  "flat": 66,
+  "limit_up": 67,
+  "limit_down": 60,
+  "broken_limit": 76,
+  "broken_rate%": 53.1,
+  "amount_yi": 13924
+ },
+ "margin": [
+  {
+   "date": "2026-11-24",
+   "rzye_yi": 21422,
+   "rz_net_buy_yi": 2.6
+  },
+  {
+   "date": "2026-11-23",
+   "rzye_yi": 21419,
+   "rz_net_buy_yi": -89.2
+  },
+  {
+   "date": "2026-11-20",
+   "rzye_yi": 21509,
+   "rz_net_buy_yi": -418.8
+  },
+  {
+   "date": "2026-11-19",
+   "rzye_yi": 21927,
+   "rz_net_buy_yi": -155.2
+  },
+  {
+   "date": "2026-11-18",
+   "rzye_yi": 22083,
+   "rz_net_buy_yi": -88.3
+  },
+  {
+   "date": "2026-11-17",
+   "rzye_yi": 22171,
+   "rz_net_buy_yi": -186.3
+  }
+ ],
+ "sector_fflow": {
+  "银行Ⅱ": {
+   "主力亿": -10.2,
+   "小单亿": -3.1,
+   "中单亿": 13.3,
+   "主力占比%": -2.38
+  },
+  "保险Ⅱ": {
+   "主力亿": -1.2,
+   "小单亿": -1.9,
+   "中单亿": 3.1,
+   "主力占比%": -1.88
+  },
+  "证券Ⅱ": {
+   "主力亿": -13.1,
+   "小单亿": 9.2,
+   "中单亿": 3.9,
+   "主力占比%": -7.26
+  },
+  "半导体": {
+   "主力亿": -126.2,
+   "小单亿": 89.5,
+   "中单亿": 36.0,
+   "主力占比%": -7.06
+  },
+  "通信设备": {
+   "主力亿": -24.4,
+   "小单亿": 29.5,
+   "中单亿": -4.2,
+   "主力占比%": -2.7
+  },
+  "元件": {
+   "err": "RemoteDisconnected('Remote end closed connection without response')"
+  },
+  "软件开发": {
+   "err": "RemoteDisconnected('Remote end closed connection without response')"
+  },
+  "消费电子": {
+   "err": "RemoteDisconnected('Remote end closed connection without response')"
+  },
+  "医疗服务": {
+   "err": "RemoteDisconnected('Remote end closed connection without response')"
+  },
+  "食品饮料": {
+   "err": "RemoteDisconnected('Remote end closed connection without response')"
+  },
+  "有色金属": {
+   "err": "RemoteDisconnected('Remote end closed connection without response')"
+  },
+  "文化传媒": {
+   "err": "RemoteDisconnected('Remote end closed connection without response')"
+  }
+ },
+ "board_avg%": {
+  "北交": -4.36,
+  "沪主板": -2.61,
+  "科创": -5.66,
+  "深主板": -2.78,
+  "创业": -4.57
+ },
+ "reconcile": {
+  "frozen_at_bj": "2026-11-25T08:10:29+08:00",
+  "gate": {
+   "盘前": "偏弱",
+   "实际上涨家数占比%": 10.6,
+   "判定": "对"
+  },
+  "kc50_open_gap%": -2.52,
+  "open_expectation": "SOXX<-2%：科创大概率低开（历史86%），开盘后均值+0.37%，低开翻绿是低吸机会",
+  "etf_ladders": {
+   "科创半导体588170": {
+    "low": 0.63,
+    "high": 0.674,
+    "fills": [
+     {
+      "buy": 0.689,
+      "n": 1,
+      "at": "09:35",
+      "sell": null,
+      "pnl%": -8.42,
+      "closed": false
+     },
+     {
+      "buy": 0.65,
+      "n": 2,
+      "at": "13:45",
+      "sell": null,
+      "pnl%": -2.92,
+      "closed": false
+     }
+    ]
+   },
+   "通信515880": {
+    "low": 0.371,
+    "high": 0.392,
+    "fills": []
+   },
+   "影视516620": {
+    "low": 0.847,
+    "high": 0.893,
+    "fills": [
+     {
+      "buy": 0.855,
+      "n": 1,
+      "at": "14:00",
+      "sell": null,
+      "pnl%": -0.94,
+      "closed": false
+     }
+    ]
+   },
+   "机器人562500": {
+    "low": 0.775,
+    "high": 0.816,
+    "fills": [
+     {
+      "buy": 0.778,
+      "n": 1,
+      "at": "14:10",
+      "sell": null,
+      "pnl%": -0.26,
+      "closed": false
+     }
+    ]
+   }
+  },
+  "mentions": [
+   {
+    "name": "鹭燕医药",
+    "symbol": "sz002788",
+    "chg%": 0.48,
+    "board": "深主板",
+    "board_avg%": -2.78,
+    "excess%": 3.26
+   },
+   {
+    "name": "联亚药业",
+    "symbol": "sz301569",
+    "chg%": -0.26,
+    "board": "创业",
+    "board_avg%": -4.57,
+    "excess%": 4.31
+   },
+   {
+    "name": "梅花生物",
+    "symbol": "sh600873",
+    "chg%": -0.62,
+    "board": "沪主板",
+    "board_avg%": -2.61,
+    "excess%": 1.99
+   },
+   {
+    "name": "九阳股份",
+    "symbol": "sz002242",
+    "chg%": 10.01,
+    "board": "深主板",
+    "board_avg%": -2.78,
+    "excess%": 12.79
+   },
+   {
+    "name": "中际旭创",
+    "symbol": "sz300308",
+    "chg%": -1.92,
+    "board": "创业",
+    "board_avg%": -4.57,
+    "excess%": 2.65
+   }
+  ]
+ }
+}
