@@ -34,17 +34,17 @@ def main():
         if status!="无": alert.append(f"{name}：{status}（距20日最高{dd:.1f}%，当日{ch:.1f}%，量比{vr:.2f}）")
     os.makedirs("data/signal",exist_ok=True)
     json.dump(out,open(f"data/signal/{today}.json","w"),ensure_ascii=False,indent=1)
+    trig=[a for a in alert if "：触发" in a]
     if alert:
-        txt=f"""# 底部信号 {today}
-    {chr(10).join(alert)}
-
-    历史参考（①，样本小）：科创50 2020年起6次信号，满仓20日均+11%、60日均+7%，中途最深均-2%；创业板4次中2次失败（2015-07-15、2011-05-23）。知识库还记有2026-10两次信号来早了。
-    纸面账户 G 按规则处理；用户本人不实盘（项目规则：只做纸面）。
-    """
-        open(f"data/signal/ALERT_{today}.md","w").write(txt)
         try:
-            with open("data/daily_log.md","a",encoding="utf-8") as f: f.write(f"\n**⚠ 底部信号检查 {today}：** "+"；".join(alert)+"（详见 data/signal/ALERT_"+today+".md）\n")
+            with open("data/daily_log.md","a",encoding="utf-8") as f: f.write(f"\n底部信号检查 {today}："+"；".join(alert)+"\n")
         except Exception: pass
+    if trig:
+        txt=(f"# 底部信号 {today}\n"+"\n".join(alert)+"\n\n"
+             "历史参考（①，样本小）：2025-01至2026-11逐日回放，'触发'只出现在2025-04-07（科创50、创业板，20日后+11%、+12%）和2026-11-03（科创50）。"
+             "2020年以来科创50共6次，满仓20日均+11%；创业板更早有2次失败（2015-07-15、2011-05-23）。量比门槛1.3，11-03只有1.36，刚好过线，门槛稍高就会漏掉，参数有拟合风险。\n"
+             "纸面账户G按规则处理；用户本人只做纸面，不实盘。\n")
+        open(f"data/signal/ALERT_{today}.md","w").write(txt)
     print(json.dumps(out,ensure_ascii=False))
 
 if __name__=="__main__": main()
