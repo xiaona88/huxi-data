@@ -9,13 +9,16 @@ def get(u):
             time.sleep(2)
 def daily(s,n=40): return get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={s}&scale=240&ma=no&datalen={n}")
 def m5(s): return get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={s}&scale=5&ma=no&datalen=60")
-FEE=0.0001; CAP0=100000.0; START=os.environ.get("PAPER_START","2026-11-25"); D=os.environ.get("PAPER_DIR","data/paper")
+FEE=0.00025; MINFEE=5.0; STAMP=0.0005; CAP0=100000.0; START=os.environ.get("PAPER_START","2026-11-25"); D=os.environ.get("PAPER_DIR","data/paper")
 bj=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
 today=os.environ.get("TODAY") or bj.date().isoformat()
 if today<START: raise SystemExit("not started")
+# 11-25 修：北京时间收盘前不结算（之前在凌晨跑过一次，把空的一天记成"已结算"）
+if not os.environ.get("TODAY") and (bj.hour,bj.minute)<(15,5): raise SystemExit("before close, skip")
 SP=f"{D}/state.json"; os.makedirs(D,exist_ok=True)
 st=json.load(open(SP)) if os.path.exists(SP) else {"D":{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[]},"A":{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[]},"B":{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[],"bought":False},"C":{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[]},"last":""}
 if st["last"]==today: raise SystemExit("already settled today")
+st.setdefault("F",{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[],"bought":False})
 log=[]
 def bars(s):
     b=[x for x in m5(s) if x["day"].startswith(today)]
@@ -28,7 +31,7 @@ def equity(acc,prices): return acc["cash"]+sum(p["sh"]*prices.get(k,p.get("last"
 def buy(acc,s,amt_or_sh,price,why,by_shares=False,prices=None,cap=None):
     sh=amt_or_sh if by_shares else int(amt_or_sh/price/100)*100
     if sh<=0: return 0
-    cost=sh*price*(1+FEE)
+    cost=sh*price+max(MINFEE,sh*price*FEE)
     if cap is not None:
         eq=equity(acc,prices); held=eq-acc["cash"]
         if held+sh*price>cap*eq: return 0
@@ -39,9 +42,16 @@ def buy(acc,s,amt_or_sh,price,why,by_shares=False,prices=None,cap=None):
 def sell(acc,s,sh,price,why):
     p=acc["pos"].get(s)
     if not p or sh<=0: return 0
-    sh=min(sh,p["sh"]); acc["cash"]+=sh*price*(1-FEE); p["sh"]-=sh
+    sh=min(sh,p["sh"]); amt=sh*price
+    tax=amt*STAMP if is_stock(s) else 0.0
+    acc["cash"]+=amt-max(MINFEE,amt*FEE)-tax; p["sh"]-=sh
     log.append(f"{today} {why} 卖 {s} {sh}份 @{price:.3f}"); return sh
 
+def is_stock(s): return s[2:4] in ("00","30","60","68") and not s[2:5] in ("159","510","512","513","515","516","518","560","561","562","588")
+def tick(s): return 0.01 if is_stock(s) else 0.001
+# 成交假设（11-25 改保守）：挂价单必须"穿价"至少一个最小价位才算成交，只碰到不算
+def thru_down(b,lv,s): return b["l"]<=lv-tick(s)
+def thru_up(b,lv,s): return b["h"]>=lv+tick(s)
 prices={}
 def run_t(acc,symbols,base=0.10,sell_up=0.03,back=0.03,cap=0.60,stop_ma5=None,tag=""):
     acc.setdefault("flags",{})
@@ -58,16 +68,16 @@ def run_t(acc,symbols,base=0.10,sell_up=0.03,back=0.03,cap=0.60,stop_ma5=None,ta
         else: levels=[]
         for b in B5:
             prices[s]=b["c"]
-            if not f["base"] and b["l"]<=pc:
+            if not f["base"] and thru_down(b,pc,s):
                 if buy(acc,s,base*CAP0,min(pc,b["o"]),tag+"底仓(翻绿)",prices=prices,cap=cap): f["base"]=True
             for lv,w,name in levels:
-                if name not in f["lad"] and b["l"]<=lv:
+                if name not in f["lad"] and thru_down(b,lv,s):
                     if buy(acc,s,w*CAP0,min(lv,b["o"]),tag+name,prices=prices,cap=cap): f["lad"].append(name)
-            if f["buyback"] and b["l"]<=f["buyback"]["px"]:
+            if f["buyback"] and thru_down(b,f["buyback"]["px"],s):
                 px=min(f["buyback"]["px"],b["o"])
                 if buy(acc,s,f["buyback"]["sh"],px,tag+"接回",by_shares=True,prices=prices,cap=cap): f["buyback"]=None
             p=acc["pos"].get(s)
-            if p and avail>=300 and not f["buyback"] and not sold_today and b["h"]>=pc*(1+sell_up):
+            if p and avail>=300 and not f["buyback"] and not sold_today and thru_up(b,pc*(1+sell_up),s):
                 px=max(pc*(1+sell_up),b["o"]); sh=int(avail/3/100)*100
                 if sell(acc,s,sh,px,tag+f"冲高+{int(sell_up*100)}%卖1/3"):
                     sold_today=True; avail-=sh; f["buyback"]={"sh":sh,"px":round(min(px*(1-back),pc),3)}
@@ -93,6 +103,17 @@ if not Bacc.get("bought"):
         if s in prices: buy(Bacc,s,w*CAP0,prices[s],"B建仓(收盘)")
     Bacc["bought"]=True
 for s,p in Bacc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
+# ---- F 笨办法基准：首日收盘 沪深300ETF、红利低波各半，之后不动 ----
+Facc=st.setdefault("F",{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[],"bought":False})
+for s in ["sh510300","sh512890"]:
+    if s not in prices:
+        b=bars(s)
+        if b: prices[s]=b[-1]["c"]
+if not Facc.get("bought"):
+    for s in ["sh510300","sh512890"]:
+        if s in prices: buy(Facc,s,0.5*CAP0*0.999,prices[s],"F基准建仓(收盘)")
+    Facc["bought"]=True
+for s,p in Facc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
 # ---- C ----
 Cacc=st["C"]; calls=json.load(open("data/paper/follow_calls.json",encoding="utf-8"))
 for c in calls:
@@ -111,7 +132,7 @@ for s,p in Cacc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
 json.dump(calls,open("data/paper/follow_calls.json","w"),ensure_ascii=False,indent=1)
 # ---- 结算 ----
 summ=[]
-for k in ["A","B","C","D"]:
+for k in ["A","B","C","D","F"]:
     acc=st[k]; acc["pos"]={s:p for s,p in acc["pos"].items() if p["sh"]>0}
     eq=equity(acc,prices); acc["peak"]=max(acc["peak"],eq); dd=(eq/acc["peak"]-1)*100; acc["mdd"]=min(acc["mdd"],dd)
     acc["days"].append({"date":today,"equity":round(eq,2)})
