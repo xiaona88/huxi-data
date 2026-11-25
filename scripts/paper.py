@@ -133,6 +133,32 @@ for s in list(Gacc["hold"]):
     if h["left"]<=0 and s in prices:
         sell(Gacc,s,Gacc["pos"].get(s,{}).get("sh",0),prices[s],"G持满20日收盘卖"); del Gacc["hold"][s]
 for s,p in Gacc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
+# ---- H 用户可交易版：任一指数"触发"当天收盘，沪深300ETF买30%；创业板ETF先买10%，再跌5%、10%各加10%（创业板历史上可能比科创晚见底5~8%）；都持有20个交易日 ----
+Hacc=st.setdefault("H",{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[],"hold":{},"lad":None})
+if any(sig.get(n,{}).get("status")=="触发" for n in GMAP) and not Hacc["hold"]:
+    for s,w in [("sh510300",0.30),("sz159915",0.10)]:
+        b=bars(s)
+        if b:
+            prices[s]=b[-1]["c"]
+            if buy(Hacc,s,w*CAP0,b[-1]["c"],"H信号买入(收盘)"): Hacc["hold"][s]={"left":20}
+    if "sz159915" in prices: Hacc["lad"]={"p0":prices["sz159915"],"done":[]}
+if Hacc.get("lad") and "sz159915" in Hacc["hold"]:
+    b=bars("sz159915")
+    if b:
+        prices["sz159915"]=b[-1]["c"]
+        for k in (0.05,0.10):
+            lv=round(Hacc["lad"]["p0"]*(1-k),3)
+            if k not in Hacc["lad"]["done"] and any(thru_down(x,lv,"sz159915") for x in b):
+                if buy(Hacc,"sz159915",0.10*CAP0,lv,f"H创业板跌{int(k*100)}%加仓"): Hacc["lad"]["done"].append(k)
+for s in list(Hacc["hold"]):
+    if s not in prices:
+        b=bars(s)
+        if b: prices[s]=b[-1]["c"]
+    h=Hacc["hold"][s]; h["left"]-=1
+    if h["left"]<=0 and s in prices:
+        sell(Hacc,s,Hacc["pos"].get(s,{}).get("sh",0),prices[s],"H持满20日收盘卖"); del Hacc["hold"][s]
+        if s=="sz159915": Hacc["lad"]=None
+for s,p in Hacc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
 # ---- C ----
 Cacc=st["C"]; calls=json.load(open("data/paper/follow_calls.json",encoding="utf-8"))
 for c in calls:
@@ -151,7 +177,7 @@ for s,p in Cacc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
 json.dump(calls,open("data/paper/follow_calls.json","w"),ensure_ascii=False,indent=1)
 # ---- 结算 ----
 summ=[]
-for k in ["A","B","C","D","F","G"]:
+for k in ["A","B","C","D","F","G","H"]:
     acc=st[k]; acc["pos"]={s:p for s,p in acc["pos"].items() if p["sh"]>0}
     eq=equity(acc,prices); acc["peak"]=max(acc["peak"],eq); dd=(eq/acc["peak"]-1)*100; acc["mdd"]=min(acc["mdd"],dd)
     acc["days"].append({"date":today,"equity":round(eq,2)})
