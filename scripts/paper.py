@@ -114,6 +114,25 @@ if not Facc.get("bought"):
         if s in prices: buy(Facc,s,0.5*CAP0*0.999,prices[s],"F基准建仓(收盘)")
     Facc["bought"]=True
 for s,p in Facc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
+# ---- G 底部信号账户：信号触发当天收盘，用50%资金买对应ETF（科创50→588000，创业板指→159915），持有20个交易日后收盘卖 ----
+Gacc=st.setdefault("G",{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[],"hold":{}})
+try: sig=json.load(open(f"data/signal/{today}.json"))["items"]
+except Exception: sig={}
+GMAP={"科创50":"sh588000","创业板指":"sz159915"}
+for name,s in GMAP.items():
+    if sig.get(name,{}).get("status")=="触发" and s not in Gacc["hold"]:
+        b=bars(s)
+        if b:
+            prices[s]=b[-1]["c"]; sh=buy(Gacc,s,0.5*CAP0*0.99,b[-1]["c"],"G底部信号买入(收盘)")
+            if sh: Gacc["hold"][s]={"left":20}
+for s in list(Gacc["hold"]):
+    if s not in prices:
+        b=bars(s)
+        if b: prices[s]=b[-1]["c"]
+    h=Gacc["hold"][s]; h["left"]-=1
+    if h["left"]<=0 and s in prices:
+        sell(Gacc,s,Gacc["pos"].get(s,{}).get("sh",0),prices[s],"G持满20日收盘卖"); del Gacc["hold"][s]
+for s,p in Gacc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
 # ---- C ----
 Cacc=st["C"]; calls=json.load(open("data/paper/follow_calls.json",encoding="utf-8"))
 for c in calls:
@@ -132,7 +151,7 @@ for s,p in Cacc["pos"].items(): p["last"]=prices.get(s,p.get("last",0))
 json.dump(calls,open("data/paper/follow_calls.json","w"),ensure_ascii=False,indent=1)
 # ---- 结算 ----
 summ=[]
-for k in ["A","B","C","D","F"]:
+for k in ["A","B","C","D","F","G"]:
     acc=st[k]; acc["pos"]={s:p for s,p in acc["pos"].items() if p["sh"]>0}
     eq=equity(acc,prices); acc["peak"]=max(acc["peak"],eq); dd=(eq/acc["peak"]-1)*100; acc["mdd"]=min(acc["mdd"],dd)
     acc["days"].append({"date":today,"equity":round(eq,2)})
