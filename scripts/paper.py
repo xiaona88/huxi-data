@@ -89,7 +89,7 @@ def run_t(acc,symbols,base=0.10,sell_up=0.03,back=0.03,cap=0.60,stop_ma5=None,ta
 ETF=["sh588170","sh515880","sh516620","sh562500","sz159995"]
 run_t(st["A"],ETF)
 st.setdefault("D",{"cash":CAP0,"pos":{},"peak":CAP0,"mdd":0,"days":[]})
-STK=["sz000333","sz300308","sh600674","sh600900","sz002242","sz000700"]
+STK=["sz000333","sz300308","sh600674","sh600900","sz002242","sz000700","sz002042","sz000711","sh600186"]
 run_t(st["D"],STK,base=0.10,sell_up=0.05,back=0.03,cap=0.60,stop_ma5=0.02)
 # ---- B ----
 Bacc=st["B"]
