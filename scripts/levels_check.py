@@ -72,6 +72,24 @@ def main():
         b=cache.get(s)
         if not b or b[-1]["day"]!=today: continue
         for code,txt in rules(s,b): hits.append({"type":"规则","source":code,"symbol":s,"name":n,"text":txt})
+    # 持有天数提醒：短线票拿满5个交易日（回测：主线短线票超额约只维持5天）
+    try:
+        UH=json.load(open("data/user_holdings.json",encoding="utf-8"))
+        for h in UH["holdings"]:
+            b=cache.get(h["symbol"]) or bars(h["symbol"],today)
+            if not b or b[-1]["day"]!=today: continue
+            n=sum(1 for x in b if x["day"]>h["buy_date"])
+            if h.get("type")=="短线" and n==5:
+                c=b[-1]["c"]; hits.append({"type":"价位","source":"用户","symbol":h["symbol"],"name":h["name"],"text":f"已持有满5个交易日（{h['buy_date']}买入价{h['price']}，今天收{c}，{(c/h['price']-1)*100:+.1f}%）。回测：主线里的短线票，超额大约只维持5天，拿到20天平均转为跑输；他自己个股一般拿2~5天"})
+    except Exception as e: print("holdings check fail",e)
+    # 今天六层选股的结果（明天的挂单）
+    try:
+        sk=json.load(open(f"data/stack/{today}.json",encoding="utf-8"))
+        for r in sk.get("picks",[]):
+            hits.append({"type":"规则","source":"六层","symbol":r["symbol"],"name":r["name"],"text":f"六层选股入选（{r['ind']}）：明天挂{r['limit_buy']}，保护位{r['stop']}，冲高+8%卖一半，最多拿5天——纸面账户I照此执行"})
+        if not sk.get("gate",{}).get("通过",True): hits.append({"type":"规则","source":"六层","symbol":"","name":"大势闸门","text":f"不通过（全A等权5日{sk['gate']['全A等权5日%']}%），今天不出短线票"})
+    except Exception: pass
+    if hits and all(h["name"]=="大势闸门" for h in hits): hits=[]   # 只有闸门不通过时不单独推送
     json.dump(L,open("data/levels.json","w",encoding="utf-8"),ensure_ascii=False,indent=1)
     os.makedirs("data/alerts",exist_ok=True)
     json.dump({"date":today,"pool":len(pool),"hits":hits},open(f"data/alerts/{today}.json","w",encoding="utf-8"),ensure_ascii=False,indent=1)
@@ -79,7 +97,9 @@ def main():
         pv=[h for h in hits if h["type"]=="价位"]; rl=[h for h in hits if h["type"]=="规则"]
         txt=f"# 价位与规则提醒 {today}\n\n"
         if pv: txt+="价位（他说的/你定的）：\n"+"\n".join(f"- [{h['source']}] {h['name']}：{h['text']}" for h in pv)+"\n\n"
-        if rl: txt+="按他的规则算出来的（①级，只做纸面）：\n"+"\n".join(f"- [{h['source']}] {h['name']}：{h['text']}" for h in rl)+"\n"
+        sixl=[h for h in rl if h["source"]=="六层"]; rl=[h for h in rl if h["source"]!="六层"]
+        if sixl: txt+="六层选股（他的选股思路自动跑，回测打平附近，只做纸面）：\n"+"\n".join(f"- {h['name']}：{h['text']}" for h in sixl)+"\n\n"
+        if rl: txt+="按他的规则算出来的位置（只是背景，全市场回测单独用会跑输，不是信号）：\n"+"\n".join(f"- [{h['source']}] {h['name']}：{h['text']}" for h in rl)+"\n"
         open(f"data/alerts/ALERTS_{today}.md","w",encoding="utf-8").write(txt)
         try:
             with open("data/daily_log.md","a",encoding="utf-8") as f: f.write(f"\n价位与规则提醒 {today}：{len(pv)}条价位、{len(rl)}条规则，详见 data/alerts/ALERTS_{today}.md\n")
