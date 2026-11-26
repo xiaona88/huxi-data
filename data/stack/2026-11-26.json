@@ -1,0 +1,102 @@
+{
+ "date": "2026-11-26",
+ "gate": {
+  "全A等权5日%": -6.15,
+  "通过": false
+ },
+ "picks": [],
+ "candidates_n": 9,
+ "candidates": [
+  {
+   "symbol": "sz002687",
+   "name": "乔治白",
+   "ind": "服装鞋类",
+   "close": 5.6,
+   "limit_buy": 5.6,
+   "stop": 5.527,
+   "lastzt": 5.64,
+   "ind_rank5": 0.78
+  },
+  {
+   "symbol": "sh600754",
+   "name": "锦江酒店",
+   "ind": "酒店旅游",
+   "close": 20.9,
+   "limit_buy": 20.9,
+   "stop": 20.159,
+   "lastzt": 20.57,
+   "ind_rank5": 0.64
+  },
+  {
+   "symbol": "sz300010",
+   "name": "ST豆神",
+   "ind": "电子信息",
+   "close": 3.82,
+   "limit_buy": 3.82,
+   "stop": 3.714,
+   "lastzt": 3.79,
+   "ind_rank5": 0.31
+  },
+  {
+   "symbol": "sh603278",
+   "name": "大业股份",
+   "ind": "",
+   "close": 11.98,
+   "limit_buy": 11.98,
+   "stop": 11.437,
+   "lastzt": 11.67,
+   "ind_rank5": null
+  },
+  {
+   "symbol": "sh603386",
+   "name": "骏亚科技",
+   "ind": "",
+   "close": 14.52,
+   "limit_buy": 14.52,
+   "stop": 14.298,
+   "lastzt": 14.59,
+   "ind_rank5": null
+  },
+  {
+   "symbol": "sh603868",
+   "name": "飞科电器",
+   "ind": "",
+   "close": 34.7,
+   "limit_buy": 34.7,
+   "stop": 33.536,
+   "lastzt": 34.22,
+   "ind_rank5": null
+  },
+  {
+   "symbol": "sh605338",
+   "name": "巴比食品",
+   "ind": "",
+   "close": 21.22,
+   "limit_buy": 21.22,
+   "stop": 20.462,
+   "lastzt": 20.88,
+   "ind_rank5": null
+  },
+  {
+   "symbol": "sh605398",
+   "name": "新炬网络",
+   "ind": "",
+   "close": 20.99,
+   "limit_buy": 20.99,
+   "stop": 19.845,
+   "lastzt": 20.25,
+   "ind_rank5": null
+  },
+  {
+   "symbol": "sz003032",
+   "name": "传智教育",
+   "ind": "",
+   "close": 8.86,
+   "limit_buy": 8.86,
+   "stop": 8.693,
+   "lastzt": 8.87,
+   "ind_rank5": null
+  }
+ ],
+ "rules": "明天挂limit_buy，碰到才买；收盘跌破stop就走；冲高+8%先卖一半；最多5个交易日"
+}
