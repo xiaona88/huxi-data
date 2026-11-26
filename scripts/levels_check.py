@@ -75,7 +75,7 @@ def main():
     # 持有天数提醒：短线票拿满5个交易日（回测：主线短线票超额约只维持5天）
     try:
         UH=json.load(open("data/user_holdings.json",encoding="utf-8"))
-        for h in UH["holdings"]:
+        for h in [x for x in UH["holdings"] if "sold" not in x]:
             b=cache.get(h["symbol"]) or bars(h["symbol"],today)
             if not b or b[-1]["day"]!=today: continue
             n=sum(1 for x in b if x["day"]>h["buy_date"])
