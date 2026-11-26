@@ -9,7 +9,7 @@ def get(u):
             time.sleep(2)
 def daily(s,n=40): return get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={s}&scale=240&ma=no&datalen={n}")
 def m5(s): return get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={s}&scale=5&ma=no&datalen=60")
-FEE=0.00025; MINFEE=5.0; STAMP=0.0005; CAP0=100000.0; START=os.environ.get("PAPER_START","2026-11-25"); D=os.environ.get("PAPER_DIR","data/paper")
+FEE=0.00025; MINFEE=0.0; STAMP=0.0005; CAP0=100000.0; START=os.environ.get("PAPER_START","2026-11-25"); D=os.environ.get("PAPER_DIR","data/paper")
 bj=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
 today=os.environ.get("TODAY") or bj.date().isoformat()
 if today<START: raise SystemExit("not started")
