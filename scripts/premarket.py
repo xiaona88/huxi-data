@@ -77,6 +77,6 @@ L=[f"# 盘前冻结 {today}（北京 {bj.strftime('%H:%M')} 冻结，依据 {pd}
    "隔夜美股："+"，".join(f"{k} {v.get('chg%','?')}%" for k,v in us.items())+f"。{exp}","","ETF梯子（碰到买价按买价成交，同日+2%卖）："]
 for s_,x in lad.items(): L.append(f"- {x['name']}：前收{x['prev_close']}，5日线{x['ma5']}，买价 "+"、".join(f"{p}×{n}" for p,n in x['buy_levels']))
 L+=["","他点名的票（观察期内）："]+[f"- {x['name']} {x['symbol']}：{x['said']}｜判据：{x['check']}｜到期{x['due'] or '无'}" for x in out["mentions_open"]]
-L+=["","进行中的预测："]+[f"- {x['id']}（{x['by']}）{x['claim']}｜到期{x['due'] or '无'}｜{x['backtest']}" for x in out["predictions_open"]]
+L+=["","进行中的预测："]+[f"- {x.get('id')}（{x.get('by') or x.get('who','')}）{x.get('claim','')}｜到期{x.get('due') or '无'}｜{x.get('backtest') or x.get('basis','')}" for x in out["predictions_open"]]
 open(f"data/premarket/{today}.md","w",encoding="utf-8").write("\n".join(L)+"\n")
 print("\n".join(L))
