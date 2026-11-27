@@ -42,16 +42,42 @@ gate["规则"]="指数站上20日线≥3个+1否则-1；炸板率<25%+1否则-1�
 out["gate"]=gate
 
 # 2 隔夜美股（只用来预判开盘方向，③：美股只影响开盘，不影响收盘）
+def _get_ref(u,ref):
+    return urllib.request.urlopen(urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0","Referer":ref}),timeout=20).read().decode("utf-8","replace")
+def _us_sina(k):
+    # 新浪美股日K（11-26 探测在 GitHub 机器上可用；东方财富 push2his 对境外 IP 经常直接断开连接）
+    t=_get_ref(f"https://stock.finance.sina.com.cn/usstock/api/jsonp.php/x/US_MinKService.getDailyK?symbol={k}&type=daily","https://stock.finance.sina.com.cn/")
+    j=json.loads(t[t.index("(")+1:t.rindex(")")])
+    return [(x["d"],float(x["c"])) for x in j[-3:]]
+def _us_em(secid):
+    j=json.loads(_get_ref(f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1&fields2=f51,f53&klt=101&fqt=1&end=20500101&lmt=3","https://quote.eastmoney.com/"))
+    return [(a,float(b)) for a,b in (x.split(",")[:2] for x in j["data"]["klines"])]
 us={}
 for k,secid in plan["us_watch"].items():
-    try:
-        j=json.loads(get(f"https://push2his.eastmoney.com/api/qt/stock/kline/get?secid={secid}&fields1=f1&fields2=f51,f53&klt=101&fqt=1&end=20500101&lmt=3"))
-        kl=[x.split(",") for x in j["data"]["klines"]]
-        us[k]={"date":kl[-1][0],"close":float(kl[-1][1]),"chg%":round((float(kl[-1][1])/float(kl[-2][1])-1)*100,2)}
-    except Exception as e: us[k]={"err":repr(e)[:120]}
+    errs=[]
+    for src,fn in (("sina",lambda:_us_sina(k)),("eastmoney",lambda:_us_em(secid))):
+        for i in range(3):
+            try:
+                kl=fn()
+                us[k]={"date":kl[-1][0],"close":kl[-1][1],"chg%":round((kl[-1][1]/kl[-2][1]-1)*100,2),"src":src}
+                break
+            except Exception as e:
+                errs.append(f"{src}#{i+1}:{repr(e)[:60]}"); time.sleep(3)
+        if k in us: break
+    if k not in us: us[k]={"err":"; ".join(errs)[:300]}
+    time.sleep(1.5)   # 逐个查、隔开，避免被限流
 out["us"]=us
+# 美股日期核对：应为北京今天的前一个美东自然日；更早说明美股休市（或数据没更新）
+_d=(bj-datetime.timedelta(hours=13)).date()   # 北京早上 ≈ 美东前一天晚上（夏令时差12小时，偏差不影响日期）
+while _d.weekday()>=5: _d-=datetime.timedelta(days=1)   # 周一早上对应美东周五
+_et_prev=_d.isoformat()
+_ds=sorted({v["date"] for v in us.values() if "date" in v})
+if _ds and _ds[-1]<_et_prev:
+    out["us_date_note"]=f"美股最新交易日是{_ds[-1]}，昨晚（美东{_et_prev}）没有新数据（休市或未更新），隔夜信号沿用旧数据，不算新信号"
+elif _ds: out["us_date_note"]=f"美股数据日期{_ds[-1]}，是昨晚的交易日"
 s=us.get("SOXX",{}).get("chg%")
 if s is None: exp="美股数据缺失"
+elif out.get("us_date_note","").startswith("美股最新交易日"): exp="昨晚美股没有交易：今天没有隔夜信号"
 elif s>2: exp="SOXX>+2%：科创大概率高开（历史76%），但开盘后均值-0.17%，不追高开"
 elif s<-2: exp="SOXX<-2%：科创大概率低开（历史86%），开盘后均值+0.37%，低开翻绿是低吸机会"
 else: exp="SOXX在±2%内：对开盘影响小"
@@ -74,7 +100,7 @@ out["predictions_open"]=[x for x in json.load(open("data/predictions.json",encod
 json.dump(out,open(f"data/premarket/{today}.json","w"),ensure_ascii=False,indent=1)
 L=[f"# 盘前冻结 {today}（北京 {bj.strftime('%H:%M')} 冻结，依据 {pd} 收盘）","",
    f"闸门：{gate['闸门结论']}。站上20日线的指数：{'、'.join(above20) or '无'}；炸板率{gate['炸板率%']}%；成交{gate['成交亿']}亿（20cm条件{gate['20cm条件(他原话:需2万亿)']}）；融资连续净流出{neg}天。",
-   "隔夜美股："+"，".join(f"{k} {v.get('chg%','?')}%" for k,v in us.items())+f"。{exp}","","ETF梯子（碰到买价按买价成交，同日+2%卖）："]
+   "隔夜美股："+"，".join(f"{k} {v.get('chg%','?')}%" for k,v in us.items())+f"（{out.get('us_date_note','日期未知')}）。{exp}","","ETF梯子（碰到买价按买价成交，同日+2%卖）："]
 for s_,x in lad.items(): L.append(f"- {x['name']}：前收{x['prev_close']}，5日线{x['ma5']}，买价 "+"、".join(f"{p}×{n}" for p,n in x['buy_levels']))
 L+=["","他点名的票（观察期内）："]+[f"- {x['name']} {x['symbol']}：{x['said']}｜判据：{x['check']}｜到期{x['due'] or '无'}" for x in out["mentions_open"]]
 L+=["","进行中的预测："]+[f"- {x.get('id')}（{x.get('by') or x.get('who','')}）{x.get('claim','')}｜到期{x.get('due') or '无'}｜{x.get('backtest') or x.get('basis','')}" for x in out["predictions_open"]]
