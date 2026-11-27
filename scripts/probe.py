@@ -1,8 +1,10 @@
 import json, urllib.request, datetime
 def get(u,ref):
-    return urllib.request.urlopen(urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0","Referer":ref}),timeout=30).read().decode("gbk","ignore")
+    return urllib.request.urlopen(urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0","Referer":ref}),timeout=30).read().decode("utf8","ignore")
 out={"at":datetime.datetime.utcnow().isoformat()}
-syms="bj920186,sh688516,sz003043,sh603690,sh688605,sh588170,sh000688,sh510050,sh588000,sz000700,sz002931"
-try: out["hq"]=get("https://hq.sinajs.cn/list="+syms,"https://finance.sina.com.cn/")
-except Exception as e: out["hq"]=repr(e)
+for s in ["sh000688","sh588000","sh510050","sh510300","sh000001"]:
+    try:
+        t=get(f"https://quotes.sina.cn/cn/api/jsonp_v2.php/x/CN_MarketDataService.getKLineData?symbol={s}&scale=5&ma=no&datalen=80","https://finance.sina.com.cn/")
+        out[s]=json.loads(t[t.index("(")+1:t.rindex(")")])
+    except Exception as e: out[s]=repr(e)[:200]
 json.dump(out,open("data/probe.json","w"),ensure_ascii=False)
