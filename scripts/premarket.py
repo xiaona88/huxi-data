@@ -83,6 +83,25 @@ elif s<-2: exp="SOXX<-2%：科创大概率低开（历史86%），开盘后均�
 else: exp="SOXX在±2%内：对开盘影响小"
 out["open_expectation"]=exp
 
+# 2b 韩国开盘（KOSPI 北京08:00开盘，早于A股1.5小时）。回测2024-03~2026-11（N≈640）：韩开盘跳空与A股开盘跳空相关约0.5，
+# 扣掉美股后仍约0.44，美股休市日约0.66~0.70；与A股开盘后（收/开）相关≈0。韩高开≥1%：A股高开约83%，科创50开盘后均-0.30%；
+# 韩低开≤-1%：A股低开约92%，科创50开盘后均+0.18%。→ 和美股一样只决定怎么开，不决定怎么收。
+kos={}
+try:
+    _t=_get_ref("https://hq.sinajs.cn/list=b_KOSPI","https://finance.sina.com.cn/")
+    _f=_t.split('"')[1].split(",")
+    _o,_pc,_p=float(_f[8]),float(_f[9]),float(_f[1])
+    kos={"open_gap%":round((_o/_pc-1)*100,2),"now%":round((_p/_pc-1)*100,2),"time":_f[7],"date":_f[6]}
+except Exception as e: kos={"err":repr(e)[:120]}
+out["kospi"]=kos
+g=kos.get("open_gap%")
+if g is None: kexp="韩国数据缺失"
+elif kos.get("date")!=today: kexp="韩国今天没开盘（休市或数据未更新）"
+elif g>=1: kexp=f"韩国高开{g}%：A股大概率高开（历史约83%），但科创50开盘后均-0.30%，不追高开"
+elif g<=-1: kexp=f"韩国低开{g}%：A股大概率低开（历史约92%），科创50开盘后均+0.18%"
+else: kexp=f"韩国开盘{g}%，平开附近：对A股开盘影响小"
+out["kospi_expectation"]=kexp
+
 # 3 ETF梯子
 lad={}
 for sym,cfg in plan["etf_ladders"].items():
@@ -100,7 +119,7 @@ out["predictions_open"]=[x for x in json.load(open("data/predictions.json",encod
 json.dump(out,open(f"data/premarket/{today}.json","w"),ensure_ascii=False,indent=1)
 L=[f"# 盘前冻结 {today}（北京 {bj.strftime('%H:%M')} 冻结，依据 {pd} 收盘）","",
    f"闸门：{gate['闸门结论']}。站上20日线的指数：{'、'.join(above20) or '无'}；炸板率{gate['炸板率%']}%；成交{gate['成交亿']}亿（20cm条件{gate['20cm条件(他原话:需2万亿)']}）；融资连续净流出{neg}天。",
-   "隔夜美股："+"，".join(f"{k} {v.get('chg%','?')}%" for k,v in us.items())+f"（{out.get('us_date_note','日期未知')}）。{exp}","","ETF梯子（碰到买价按买价成交，同日+2%卖）："]
+   "隔夜美股："+"，".join(f"{k} {v.get('chg%','?')}%" for k,v in us.items())+f"（{out.get('us_date_note','日期未知')}）。{exp}",f"韩国开盘：{kexp}（当前{kos.get('now%','?')}%，{kos.get('time','')}）","","ETF梯子（碰到买价按买价成交，同日+2%卖）："]
 for s_,x in lad.items(): L.append(f"- {x['name']}：前收{x['prev_close']}，5日线{x['ma5']}，买价 "+"、".join(f"{p}×{n}" for p,n in x['buy_levels']))
 L+=["","他点名的票（观察期内）："]+[f"- {x['name']} {x['symbol']}：{x['said']}｜判据：{x['check']}｜到期{x['due'] or '无'}" for x in out["mentions_open"]]
 L+=["","进行中的预测："]+[f"- {x.get('id')}（{x.get('by') or x.get('who','')}）{x.get('claim','')}｜到期{x.get('due') or '无'}｜{x.get('backtest') or x.get('basis','')}" for x in out["predictions_open"]]
