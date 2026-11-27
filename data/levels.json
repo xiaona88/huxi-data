@@ -148,6 +148,18 @@
    "said": "2026-11-26",
    "note": "用户止盈：+5%（成本46.16）以上走，计划下周出",
    "repeat": false
+  },
+  {
+   "id": "U7",
+   "symbol": "sz000700",
+   "name": "模塑科技",
+   "source": "用户",
+   "dir": "below",
+   "check": "close",
+   "level": 14.13,
+   "said": "2026-11-27",
+   "note": "用户14.84一手的离场线（推断，待确认）",
+   "repeat": false
   }
  ]
 }
