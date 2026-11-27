@@ -1,6 +1,10 @@
 name: intraday
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '5 2,5 * * 1-5'
+    - cron: '50 5 * * 1-5'
+    - cron: '15 6 * * 1-5'
 permissions:
   contents: write
 jobs:

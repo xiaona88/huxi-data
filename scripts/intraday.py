@@ -6,7 +6,7 @@ now=datetime.datetime.now(BJ); day=now.strftime("%Y-%m-%d"); hm=now.strftime("%H
 def get(u,ref,enc="gbk"):
     return urllib.request.urlopen(urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0","Referer":ref}),timeout=30).read().decode(enc,"ignore")
 IDX={"上证":"sh000001","沪深300":"sh000300","创业板指":"sz399006","科创50":"sh000688"}
-ETF={"科创50ETF":"sh588000","科创半导体588170":"sh588170","创业板ETF":"sz159915","沪深300ETF":"sh510300","上证50ETF":"sh510050","通信515880":"sh515880"}
+ETF={"科创50ETF":"sh588000","科创半导体588170":"sh588170","创业板ETF":"sz159915","沪深300ETF":"sh510300","上证50ETF":"sh510050","通信515880":"sh515880","中证500ETF":"sh510500"}
 H=[x for x in json.load(open("data/user_holdings.json"))["holdings"] if "sold" not in x]
 syms=list(IDX.values())+list(ETF.values())+[x["symbol"] for x in H]+["b_KOSPI"]
 out={"date":day,"time":now.strftime("%H:%M"),"quotes":{},"holdings":[],"zt":{},"notes":[]}
@@ -26,6 +26,25 @@ try:
     import glob
     prev=sorted(glob.glob("data/snapshot/*.csv.gz"))[-1]
 except Exception: prev=None
+# 宽基ETF放量：累计成交量 ÷ 20日均量，并按已交易分钟数折算全天（≥2.5倍报警，口径同 daily.py 的 etf_alarm）
+BROAD={"上证50ETF":"sh510050","沪深300ETF":"sh510300","中证500ETF":"sh510500","科创50ETF":"sh588000","创业板ETF":"sz159915"}
+def traded_min(t):
+    m=t.hour*60+t.minute
+    a=max(0,min(m,690)-570); b=max(0,min(m,900)-780)
+    return max(1,a+b)
+out["broad_vol"]={}
+for n,s in BROAD.items():
+    try:
+        k=json.loads(get(f"https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/CN_MarketData.getKLineData?symbol={s}&scale=240&ma=no&datalen=22","https://finance.sina.com.cn/","utf8"))
+        hist=[float(x["volume"]) for x in k if x["day"]<day][-20:]
+        v=out["quotes"].get(s[2:],{}).get("vol")
+        if not hist or not v: continue
+        avg=sum(hist)/len(hist); el=traded_min(now)
+        out["broad_vol"][n]={"so_far":round(v/avg,2),"projected":round(v/avg*240/el,2),"elapsed_min":el}
+    except Exception as e: out["notes"].append(f"{n}量比失败:"+repr(e)[:60])
+alarm=[n for n,r in out["broad_vol"].items() if r["projected"]>=2.5]
+out["broad_alarm"]=alarm
+if alarm: out["notes"].append("宽基放量报警（折算全天≥2.5倍）："+"、".join(alarm)+" → 用户12-02条件C2可能成立，收盘再确认")
 # 涨停池
 try:
     D=day.replace("-","")
@@ -56,6 +75,7 @@ json.dump(out,open(f"data/intraday/{day}_{hm}.json","w"),ensure_ascii=False,inde
 L=[f"# 盘中扫描 {day} {out['time']}（北京）",""]
 L.append("指数："+"；".join(f"{n} {q[s[2:]]['pct']:+.2f}%" for n,s in IDX.items() if s[2:] in q)+(f"；韩国 {q['KOSPI']['pct']:+.2f}%" if "KOSPI" in q else ""))
 L.append("ETF："+"；".join(f"{n} {q[s[2:]]['pct']:+.2f}%" for n,s in ETF.items() if s[2:] in q))
+if out["broad_vol"]: L.append("宽基量比（已成交/折算全天）："+"；".join(f"{n} {r['so_far']}/{r['projected']}" for n,r in out["broad_vol"].items())+("  报警："+"、".join(out["broad_alarm"]) if out["broad_alarm"] else "  无报警"))
 if out["zt"]: L.append(f"涨停{out['zt']['zt']} 炸板{out['zt']['zb']}；扎堆："+"、".join(f"{a}{b}" for a,b in out['zt']['by_ind']))
 for r in out["holdings"]: L.append(f"持仓 {r['name']} 成本{r['cost']} 现{r['price']} {r['pnl%']:+.1f}%"+(f" 离止盈{r['离止盈%']:+.1f}%" if '离止盈%' in r else "")+(f" 离离场线{r['离离场线%']:+.1f}%" if '离离场线%' in r else "（无离场线）"))
 L+=out["notes"]
