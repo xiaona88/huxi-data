@@ -6,3 +6,4 @@ syms="sz000158,sz000700,sh603360,sz002931,sh588170,sh600186,sz000711,sz002042,sh
 try: out["hq"]=get("https://hq.sinajs.cn/list="+syms,"https://finance.sina.com.cn/")
 except Exception as e: out["hq"]=repr(e)
 json.dump(out,open("data/probe.json","w"),ensure_ascii=False,indent=1)
+# 1795745792
