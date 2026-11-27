@@ -60,7 +60,7 @@ def main():
         try: cache[s]=bars(s,today)
         except Exception as e: cache[s]=None
     for x in L["levels"]:
-        if x.get("triggered") and not x.get("repeat"): continue
+        if (x.get("triggered") and not x.get("repeat")) or x.get("cancelled"): continue
         b=cache.get(x["symbol"])
         if not b or b[-1]["day"]!=today: continue
         v=b[-1][{"close":"c","low":"l","high":"h"}[x["check"]]]
