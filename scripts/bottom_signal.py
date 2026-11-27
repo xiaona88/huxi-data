@@ -30,7 +30,10 @@ def main():
             d.append({"day":today,"close":m[-1]["close"],"volume":str(sum(float(x["volume"]) for x in m))})
         c=[float(x["close"]) for x in d]; v=[float(x["volume"]) for x in d]
         status,dd,ch,vr=evaluate(c,v)
-        out["items"][name]={"status":status,"距20日最高%":round(dd,2),"当日%":round(ch,2),"量比":round(vr,2)}
+        r5=(c[-1]/c[-6]-1)*100
+        jj=(r5<=-6 and dd<=-10 and vr<1)   # H8 缩量急跌（规律筛选第一轮：检验期N=18，次日涨72%、5日均+1.67%，弱正，①~②）
+        out["items"][name]={"status":status,"距20日最高%":round(dd,2),"当日%":round(ch,2),"量比":round(vr,2),"5日%":round(r5,2),"缩量急跌":jj}
+        if jj: alert.append(f"{name}：缩量急跌（5日{r5:.1f}%，距20日最高{dd:.1f}%，量比{vr:.2f}；规律筛选H8，检验期次日上涨72%、5日均+1.7%，弱正、只看指数/ETF，不是个股买点）")
         if status!="无": alert.append(f"{name}：{status}（距20日最高{dd:.1f}%，当日{ch:.1f}%，量比{vr:.2f}）")
     os.makedirs("data/signal",exist_ok=True)
     json.dump(out,open(f"data/signal/{today}.json","w"),ensure_ascii=False,indent=1)
