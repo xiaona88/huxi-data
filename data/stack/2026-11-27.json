@@ -1,0 +1,73 @@
+{
+ "date": "2026-11-27",
+ "gate": {
+  "全A等权5日%": 5.61,
+  "通过": true
+ },
+ "picks": [
+  {
+   "symbol": "sz002045",
+   "name": "国光电器",
+   "ind": "电子器件",
+   "close": 9.26,
+   "limit_buy": 9.26,
+   "stop": 8.653,
+   "lastzt": 8.83,
+   "ind_rank5": 0.93
+  },
+  {
+   "symbol": "sz002249",
+   "name": "大洋电机",
+   "ind": "电器行业",
+   "close": 6.62,
+   "limit_buy": 6.62,
+   "stop": 6.399,
+   "lastzt": 6.53,
+   "ind_rank5": 0.89
+  }
+ ],
+ "candidates_n": 4,
+ "candidates": [
+  {
+   "symbol": "sz002045",
+   "name": "国光电器",
+   "ind": "电子器件",
+   "close": 9.26,
+   "limit_buy": 9.26,
+   "stop": 8.653,
+   "lastzt": 8.83,
+   "ind_rank5": 0.93
+  },
+  {
+   "symbol": "sz002249",
+   "name": "大洋电机",
+   "ind": "电器行业",
+   "close": 6.62,
+   "limit_buy": 6.62,
+   "stop": 6.399,
+   "lastzt": 6.53,
+   "ind_rank5": 0.89
+  },
+  {
+   "symbol": "sh600381",
+   "name": "*ST春天",
+   "ind": "煤炭行业",
+   "close": 3.84,
+   "limit_buy": 3.84,
+   "stop": 3.665,
+   "lastzt": 3.74,
+   "ind_rank5": 0.27
+  },
+  {
+   "symbol": "sz003032",
+   "name": "传智教育",
+   "ind": "",
+   "close": 9.48,
+   "limit_buy": 9.48,
+   "stop": 8.693,
+   "lastzt": 8.87,
+   "ind_rank5": null
+  }
+ ],
+ "rules": "明天挂limit_buy，碰到才买；收盘跌破stop就走；冲高+8%先卖一半；最多5个交易日"
+}
