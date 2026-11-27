@@ -19,7 +19,7 @@ try:
             out["quotes"]["KOSPI"]={"pct":round((float(f[1])/float(f[9])-1)*100,2)}; continue
         if len(f)<10 or float(f[2] or 0)==0: continue
         pc=float(f[2]); p=float(f[3]) or pc
-        out["quotes"][code]={"name":f[0],"price":p,"pct":round((p/pc-1)*100,2),"high":float(f[4]),"low":float(f[5]),"vol":float(f[8])}
+        out["quotes"][code[2:]]={"name":f[0],"price":p,"pct":round((p/pc-1)*100,2),"high":float(f[4]),"low":float(f[5]),"vol":float(f[8])}
 except Exception as e: out["notes"].append("行情失败:"+repr(e)[:80])
 # 量能节奏：对比昨日全天成交量（daily json 里没有就跳过）
 try:
