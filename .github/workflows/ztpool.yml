@@ -1,0 +1,16 @@
+name: ztpool-test
+on:
+  workflow_dispatch:
+  push:
+    paths: ['scripts/ztpool.py','.github/workflows/ztpool.yml']
+permissions:
+  contents: write
+jobs:
+  zt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ZT_DATE=2026-11-26 python3 -u scripts/ztpool.py
+      - run: |
+          git config user.name "zt-bot"; git config user.email "zt@users.noreply.github.com"
+          git add data/ztpool; git commit -m "ztpool test" || true; git pull --rebase -q || true; git push

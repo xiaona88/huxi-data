@@ -15,6 +15,7 @@ jobs:
       - run: python3 -u scripts/daily.py
         env:
           FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
+      - run: python3 -u scripts/ztpool.py || true
       - run: python3 -u scripts/bottom_signal.py || true
       - run: pip install -q pandas && python3 -u scripts/stack.py || true
       - run: python3 -u scripts/levels_check.py || true
